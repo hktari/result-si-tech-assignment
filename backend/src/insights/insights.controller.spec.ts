@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { InsightsController } from './insights.controller';
 import { InsightsService } from './insights.service';
 import { InsightsQueryDto } from './dto/insights-query.dto';
+import { InsightsTimePerTitle, InsightsTimePerTitleStacked } from './dto/insights-response.dto';
 
 describe('InsightsController', () => {
   let insightsController: InsightsController;
@@ -38,10 +39,17 @@ describe('InsightsController', () => {
         start: '2025-07-01T00:00:00Z',
         end: '2025-07-16T23:59:59Z',
       };
-      const expectedResult = [
-        { title: 'Reading', totalDuration: 180 },
-        { title: 'Writing', totalDuration: 120 },
-      ];
+      const expectedResult: InsightsTimePerTitle = {
+        metric: 'timePerTitle',
+        date_range: {
+          from: '2025-07-01',
+          to: '2025-07-16',
+        },
+        data: [
+          { name: 'Reading', durationMinutes: 180 },
+          { name: 'Writing', durationMinutes: 120 },
+        ],
+      };
 
       mockInsightsService.getInsights.mockResolvedValue(expectedResult);
 
@@ -62,18 +70,26 @@ describe('InsightsController', () => {
         end: '2025-07-16T23:59:59Z',
         interval: 'daily',
       };
-      const expectedResult = [
-        {
-          date: '2025-07-15',
-          Reading: 90,
-          Writing: 60,
+      const expectedResult : InsightsTimePerTitleStacked = {
+        metric: 'timePerTitleStacked',
+        date_range: {
+          from: '2025-07-01',
+          to: '2025-07-16',
         },
-        {
-          date: '2025-07-16',
-          Reading: 45,
-          Writing: 30,
-        },
-      ];
+        interval: 'daily',
+        data: [
+          {
+            date: '2025-07-15',
+            Reading: 90,
+            Writing: 60,
+          },
+          {
+            date: '2025-07-16',
+            Reading: 45,
+            Writing: 30,
+          },
+        ],
+      };
 
       mockInsightsService.getInsights.mockResolvedValue(expectedResult);
 
@@ -92,10 +108,17 @@ describe('InsightsController', () => {
         metric: 'timePerTitle',
         search: 'reading',
       };
-      const expectedResult = [
-        { title: 'Reading', totalDuration: 180 },
-        { title: 'Reading Books', totalDuration: 90 },
-      ];
+      const expectedResult: InsightsTimePerTitle = {
+        metric: 'timePerTitle',
+        date_range: {
+          from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          to: new Date().toISOString().split('T')[0],
+        },
+        data: [
+          { name: 'Reading', durationMinutes: 180 },
+          { name: 'Reading Books', durationMinutes: 90 },
+        ],
+      };
 
       mockInsightsService.getInsights.mockResolvedValue(expectedResult);
 

@@ -229,8 +229,11 @@ describe('ActivitiesController', () => {
         {
           id: 'activity1',
           title: 'Reading',
+          description: 'Reading books',
           duration: 60,
           timestamp: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
           userId: mockRequest.user.id,
         },
       ];

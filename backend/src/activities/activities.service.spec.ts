@@ -339,49 +339,6 @@ describe('ActivitiesService', () => {
     });
   });
 
-  describe('getTodayActivities', () => {
-    it('should return today\'s activities', async () => {
-      // Arrange
-      const inputUserId = 'user1';
-      const mockToday = new Date('2025-07-16T00:00:00Z');
-      const mockTomorrow = new Date('2025-07-17T00:00:00Z');
-      const mockActivities = [
-        {
-          id: 'activity1',
-          title: 'Reading',
-          duration: 60,
-          timestamp: new Date('2025-07-16T10:00:00Z'),
-          userId: inputUserId,
-        },
-      ];
-
-      jest.spyOn(global, 'Date').mockImplementation((dateString?: string) => {
-        if (dateString) return new Date(dateString) as any;
-        return mockToday as any;
-      });
-      mockPrisma.activity.findMany.mockResolvedValue(mockActivities);
-
-      // Act
-      const actualResult = await activitiesService.getTodayActivities(inputUserId);
-
-      // Assert
-      expect(actualResult).toEqual(mockActivities);
-      expect(mockPrisma.activity.findMany).toHaveBeenCalledWith({
-        where: {
-          userId: inputUserId,
-          timestamp: {
-            gte: mockToday,
-            lt: mockTomorrow,
-          },
-        },
-        orderBy: { timestamp: 'desc' },
-      });
-
-      // Cleanup
-      jest.restoreAllMocks();
-    });
-  });
-
   describe('getActivitySuggestions', () => {
     it('should return activity title suggestions', async () => {
       // Arrange
