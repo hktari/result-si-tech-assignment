@@ -6,19 +6,6 @@ trigger: always_on
 
 ### Guidelines for REACT
 
-#### REDUX
-
-- Use Redux Toolkit (RTK) instead of plain Redux to reduce boilerplate code
-- Implement the slice pattern for organizing related state, reducers, and actions
-- Use RTK Query for data fetching to eliminate manual loading state management
-- Prefer createSelector for memoized selectors to prevent unnecessary recalculations
-- Normalize complex state structures using a flat entities approach with IDs as references
-- Implement middleware selectively and avoid overusing thunks for simple state updates
-- Use the listener middleware for complex side effects instead of thunks where appropriate
-- Leverage createEntityAdapter for standardized CRUD operations
-- Implement Redux DevTools for debugging in development environments
-- Use typed hooks (useAppDispatch, useAppSelector) with TypeScript for type safety
-
 
 #### REACT_CODING_STANDARDS
 
@@ -47,4 +34,22 @@ trigger: always_on
 - Implement domain-driven design with modules that encapsulate related functionality and maintain clear boundaries
 - Use TypeORM or Mongoose with repository patterns to abstract database operations and simplify testing with mocks
 
+### Testing
 
+- Follow the Arrange-Act-Assert convention for tests.
+- Name test variables clearly.
+  - Follow the convention: inputX, mockX, actualX, expectedX, etc.
+- Write unit tests for each public function.
+  - Use test doubles to simulate dependencies.
+    - Except for third-party dependencies that are not expensive to execute.
+- Write acceptance tests for each module.
+  - Follow the Given-When-Then convention.
+
+## Specific to NestJS
+
+### Testing
+
+- Use the standard Jest framework for testing.
+- Write tests for each controller and service.
+- Write end to end tests for each api module.
+ 
