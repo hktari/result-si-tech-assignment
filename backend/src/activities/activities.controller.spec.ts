@@ -121,8 +121,8 @@ describe('ActivitiesController', () => {
       const actualResult = await activitiesController.findAll(
         mockRequest,
         inputSearch,
-        inputLimit,
-        inputOffset,
+        inputLimit.toString(),
+        inputOffset.toString(),
       );
 
       // Assert
@@ -155,7 +155,7 @@ describe('ActivitiesController', () => {
       mockActivitiesService.findOne.mockResolvedValue(expectedActivity);
 
       // Act
-      const actualResult = await activitiesController.findOne(mockRequest, inputId);
+      const actualResult = await activitiesController.findOne(inputId, mockRequest);
 
       // Assert
       expect(actualResult).toEqual(expectedActivity);
@@ -186,7 +186,7 @@ describe('ActivitiesController', () => {
       mockActivitiesService.update.mockResolvedValue(expectedActivity);
 
       // Act
-      const actualResult = await activitiesController.update(mockRequest, inputId, inputUpdateDto);
+      const actualResult = await activitiesController.update(inputId, mockRequest, inputUpdateDto);
 
       // Assert
       expect(actualResult).toEqual(expectedActivity);
@@ -213,7 +213,7 @@ describe('ActivitiesController', () => {
       mockActivitiesService.remove.mockResolvedValue(expectedActivity);
 
       // Act
-      const actualResult = await activitiesController.remove(mockRequest, inputId);
+      const actualResult = await activitiesController.remove(inputId, mockRequest);
 
       // Assert
       expect(actualResult).toEqual(expectedActivity);
@@ -256,7 +256,7 @@ describe('ActivitiesController', () => {
       mockActivitiesService.getActivitySuggestions.mockResolvedValue(expectedSuggestions);
 
       // Act
-      const actualResult = await activitiesController.getActivitySuggestions(mockRequest, inputQuery);
+      const actualResult = await activitiesController.getSuggestions(mockRequest, inputQuery);
 
       // Assert
       expect(actualResult).toEqual(expectedSuggestions);
@@ -275,7 +275,7 @@ describe('ActivitiesController', () => {
       mockActivitiesService.getActivitySuggestions.mockResolvedValue(expectedSuggestions);
 
       // Act
-      const actualResult = await activitiesController.getActivitySuggestions(mockRequest, inputQuery);
+      const actualResult = await activitiesController.getSuggestions(mockRequest, inputQuery);
 
       // Assert
       expect(actualResult).toEqual(expectedSuggestions);
