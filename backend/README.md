@@ -9,3 +9,9 @@
 # Testing
 1. npm run test
 2. npm run test:e2e
+
+
+# Setting up production database
+1. copy .env.example .env.production.local
+2. fill in production environment variables
+3. npm run setup-db
