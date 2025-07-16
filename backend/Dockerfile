@@ -1,4 +1,3 @@
-
 # Use the official Node.js image as the base image
 FROM node:20
 
@@ -14,8 +13,12 @@ RUN npm install
 # Copy the rest of the application files
 COPY . .
 
+ENV DATABASE_URL=$DATABASE_URL
+
+# Generate Prisma client
 RUN npm run prisma:generate
 
+# Run the migrations
 RUN npx prisma migrate deploy && npm run seed
 
 # Build the NestJS application
