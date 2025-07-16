@@ -31,8 +31,12 @@ describe('ActivitiesController (e2e)', () => {
 
   beforeEach(async () => {
     // Given - Clean up database and create test user
+    // Delete in correct order to handle foreign key constraints
     await prismaService.activity.deleteMany();
     await prismaService.user.deleteMany();
+    
+    // Wait a bit to ensure cleanup is complete
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     const hashedPassword = await bcrypt.hash('password123', 10);
     const user = await prismaService.user.create({
