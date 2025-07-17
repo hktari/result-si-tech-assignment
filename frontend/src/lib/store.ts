@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import todosReducer from './features/todos/todosSlice'
 import { authApi } from './features/auth/authApi'
 import authReducer from './features/auth/authSlice'
+import { activitiesApi } from './features/activities/activitiesApi'
 
 export const makeStore = () => {
   return configureStore({
@@ -9,9 +10,10 @@ export const makeStore = () => {
         todos: todosReducer,
         auth: authReducer,
         [authApi.reducerPath]: authApi.reducer,
+        [activitiesApi.reducerPath]: activitiesApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(authApi.middleware),
+      getDefaultMiddleware().concat(authApi.middleware, activitiesApi.middleware),
     devTools: process.env.NODE_ENV !== 'production',
   })
 }
