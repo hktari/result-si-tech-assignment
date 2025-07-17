@@ -5,10 +5,9 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Seeding database...');
-
   // Create demo user
-  const demoUserEmail = 'demo@example.com';
-  const demoUserPassword = 'demo123';
+  const demoUserEmail = process.env.DEMO_USER_EMAIL || 'demo@example.com';
+  const demoUserPassword = process.env.DEMO_USER_PASSWORD || 'demo123';
   
   const existingUser = await prisma.user.findUnique({
     where: { email: demoUserEmail },

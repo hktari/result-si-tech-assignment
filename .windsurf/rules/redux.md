@@ -2,7 +2,6 @@
 trigger: always_on
 ---
 
-
 #### REDUX
 
 - Use Redux Toolkit (RTK) instead of plain Redux to reduce boilerplate code
@@ -16,6 +15,10 @@ trigger: always_on
 - Implement Redux DevTools for debugging in development environments
 - Use typed hooks (useAppDispatch, useAppSelector) with TypeScript for type safety
 
+- only use Redux for globally shared, mutable data
+- use a combination of Next.js state (search params, route parameters, form state, etc.), React context and React hooks for all other state management.
+
+
 ---
 
 ### 🔧 Redux Toolkit + Next.js Integration Guidelines
@@ -26,18 +29,6 @@ trigger: always_on
 * ✅ Define `makeStore()` function that returns a new `configureStore(...)` instance.
 * ❌ Never create or export a shared store instance globally.
 
-#### 📂 Folder Structure (Recommended)
-
-* Organize as:
-
-  ```
-  /store
-    ├── index.ts          ← makeStore, wrapper
-    ├── rootReducer.ts    ← combine all slices
-    └── slices/           ← feature-specific state logic
-  /pages/_app.tsx         ← wrap app with Redux provider
-  ```
-
 #### 💡 Redux Usage
 
 * ✅ Use `createSlice()` to define isolated state logic.
@@ -45,16 +36,9 @@ trigger: always_on
 * ✅ Prefer **RTK Query** for standardized API calls + caching.
 * ❌ Avoid mixing concerns: don’t put async fetch logic directly in components or slices.
 
-#### 🧠 SSR Integration
-
-* ✅ Wrap `getServerSideProps` with `wrapper.getServerSideProps(...)`.
-* ✅ Dispatch actions inside SSR handlers to preload state:
-
   ```ts
   store.dispatch(setUser("Boštjan"))
   ```
-* ✅ Return `{ props: {} }` from `getServerSideProps` even if Redux handles state.
-
 #### 🕸 Client-Side Behavior
 
 * ✅ Use `useAppSelector()` and `useAppDispatch()` for typed Redux access.
@@ -94,3 +78,26 @@ trigger: always_on
   export const useAppDispatch = () => useDispatch<AppDispatch>()
   export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
   ```
+
+#### Implemetning APIs
+
+```ts
+// Need to use the React-specific entry point to import createApi
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import type { Pokemon } from './types'
+
+// Define a service using a base URL and expected endpoints
+export const pokemonApi = createApi({
+  reducerPath: 'pokemonApi',
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://pokeapi.co/api/v2/' }),
+  endpoints: (builder) => ({
+    getPokemonByName: builder.query<Pokemon, string>({
+      query: (name) => `pokemon/${name}`,
+    }),
+  }),
+})
+
+// Export hooks for usage in functional components, which are
+// auto-generated based on the defined endpoints
+export const { useGetPokemonByNameQuery } = pokemonApi
+```
