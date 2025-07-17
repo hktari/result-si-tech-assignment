@@ -148,9 +148,9 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         LoginDto: {
-            /** @example user@example.com */
+            /** @example demo@example.com */
             email: string;
-            /** @example password123 */
+            /** @example demo123 */
             password: string;
         };
         UserResponseDto: {
@@ -554,6 +554,36 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Insights retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        metric?: "timePerTitle";
+                        date_range?: {
+                            from?: string;
+                            to?: string;
+                        };
+                        data?: {
+                            name?: string;
+                            durationMinutes?: number;
+                        }[];
+                    } | {
+                        /** @enum {string} */
+                        metric?: "timePerTitleStacked";
+                        date_range?: {
+                            from?: string;
+                            to?: string;
+                        };
+                        /** @enum {string} */
+                        interval?: "daily" | "weekly" | "monthly";
+                        data?: Record<string, never>[];
+                    };
+                };
+            };
             /** @description Invalid query parameters */
             400: {
                 headers: {

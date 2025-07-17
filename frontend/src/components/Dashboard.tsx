@@ -12,8 +12,8 @@ import { SearchFilter } from './SearchFilter'
 
 export function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { data: activitiesData, isLoading, error } = useGetActivitiesQuery({ limit: 10 })
-  const { data: insightsData } = useGetInsightsQuery({ metric: 'daily' })
+  const { data: activitiesData, isLoading, error } = useGetActivitiesQuery({ limit: '10' })
+  const { data: insightsData } = useGetInsightsQuery({ metric: 'timePerTitle' })
 
   const recentActivities = activitiesData?.activities || []
 

@@ -25,8 +25,8 @@ export function AutocompleteInput({
 
   // Fetch recent activities for suggestions
   const { data: activitiesData } = useGetActivitiesQuery({
-    limit: 100,
-    offset: 0
+    limit: '100',
+    offset: '0'
   })
 
   // Extract unique activity titles for suggestions

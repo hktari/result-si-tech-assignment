@@ -11,12 +11,9 @@ import {
   ResponsiveContainer 
 } from 'recharts'
 
+import type { components, operations } from '@/lib/api-types'
 interface DashboardChartProps {
-  data: Array<{
-    date: string
-    totalDuration: number
-    activityCount: number
-  }>
+  data: operations['InsightsController_getInsights']['responses']['200']['content']['application/json']['data']
 }
 
 export function DashboardChart({ data }: DashboardChartProps) {

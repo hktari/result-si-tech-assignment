@@ -16,6 +16,7 @@ export class TimePerTitleDataDto {
   durationMinutes: number;
 }
 
+
 export class InsightsTimePerTitleDto {
   @ApiProperty({ description: 'Metric type', enum: ['timePerTitle'] })
   metric: 'timePerTitle';

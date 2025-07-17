@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useGetActivitiesQuery } from '@/lib/features/activities/activitiesApi'
 
 export function QuickStats() {
-  const { data: activitiesData } = useGetActivitiesQuery({ limit: 1000 })
+  const { data: activitiesData } = useGetActivitiesQuery({ limit: '1000' })
   // const { data: weeklyInsights } = useGetInsightsQuery({ metric: 'weekly' })
 
   const activities = activitiesData?.activities || []

@@ -14,7 +14,8 @@ export default function InsightsPage() {
   })
 
   const { data: insightsData, isLoading, error } = useGetInsightsQuery({
-    metric: filters.interval
+    metric: filters.metric,
+    interval: filters.interval
   })
 
   const handleFilterChange = (newFilters: typeof filters) => {
@@ -46,7 +47,7 @@ export default function InsightsPage() {
             {filters.interval.charAt(0).toUpperCase() + filters.interval.slice(1)} view
             {insightsData && (
               <span className="ml-2 text-sm font-medium">
-                • Total: {insightsData.data?.reduce((sum, item) => sum + (item.totalDuration || 0), 0) || 0} minutes
+                • Total: {insightsData.data?.reduce((sum, item) => sum + (item.durationMinutes || 0), 0) || 0} minutes
               </span>
             )}
           </CardDescription>

@@ -1,10 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { components } from '../../api-types'
+import type { components, operations } from '../../api-types'
 
 type ActivityResponseDto = components['schemas']['ActivityResponseDto']
 type CreateActivityDto = components['schemas']['CreateActivityDto']
 type UpdateActivityDto = components['schemas']['UpdateActivityDto']
 type ActivitiesListResponseDto = components['schemas']['ActivitiesListResponseDto']
+type InsightsParams = operations['InsightsController_getInsights']['parameters']['query']
+type InsightsResponseDto = operations['InsightsController_getInsights']['responses']['200']['content']['application/json']
+type GetActivitiesParams = operations['ActivitiesController_findAll']['parameters']['query']
 
 export const activitiesApi = createApi({
   reducerPath: 'activitiesApi',
@@ -21,10 +24,10 @@ export const activitiesApi = createApi({
   }),
   tagTypes: ['Activity', 'Insights'],
   endpoints: (builder) => ({
-    getActivities: builder.query<ActivitiesListResponseDto, { search?: string; limit?: number; offset?: number }>({
-      query: ({ search, limit = 50, offset = 0 }) => ({
+    getActivities: builder.query<ActivitiesListResponseDto, GetActivitiesParams>({
+      query: (params) => ({
         url: 'activities',
-        params: { search, limit, offset },
+        params,
       }),
       providesTags: ['Activity'],
     }),
@@ -37,10 +40,10 @@ export const activitiesApi = createApi({
       invalidatesTags: ['Activity', 'Insights'],
     }),
     updateActivity: builder.mutation<ActivityResponseDto, { id: string; updates: UpdateActivityDto }>({
-      query: ({ id, updates }) => ({
-        url: `activities/${id}`,
+      query: (params) => ({
+        url: `activities/${params.id}`,
         method: 'PATCH',
-        body: updates,
+        body: params.updates,
       }),
       invalidatesTags: ['Activity', 'Insights'],
     }),
@@ -51,10 +54,10 @@ export const activitiesApi = createApi({
       }),
       invalidatesTags: ['Activity', 'Insights'],
     }),
-    getInsights: builder.query<{ data: Array<{ date: string; totalDuration: number; activityCount: number }> }, { metric: 'daily' | 'weekly' | 'monthly' }>({
-      query: ({ metric }) => ({
+    getInsights: builder.query<InsightsResponseDto, InsightsParams>({
+      query: (params) => ({
         url: 'insights',
-        params: { metric },
+        params,
       }),
       providesTags: ['Insights'],
     }),
