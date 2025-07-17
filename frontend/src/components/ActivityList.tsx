@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Button } from './ui/button'
+import { Button } from '@/components/ui/button'
 import { useDeleteActivityMutation } from '@/lib/features/activities/activitiesApi'
 import type { components } from '@/lib/api-types'
 

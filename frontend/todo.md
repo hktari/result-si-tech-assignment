@@ -1,0 +1,6 @@
+- setup cypress tests
+- autocomplete inside add activity modal
+- autoredirect to login page if not logged in
+- add toast notifications. Improve error messages
+- make sure mobile responsive
+- integrate shadcn ui

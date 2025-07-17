@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
-import { Navigation } from '@/components/Navigation';
+import { ProtectedLayout } from '@/components/ProtectedLayout';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,8 +30,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <StoreProvider>
-          <Navigation />
-          {children}
+          <ProtectedLayout>
+            {children}
+          </ProtectedLayout>
         </StoreProvider>
       </body>
     </html>

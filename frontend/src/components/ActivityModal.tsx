@@ -1,9 +1,10 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Button } from './ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useCreateActivityMutation } from '@/lib/features/activities/activitiesApi'
+import { AutocompleteInput } from './AutocompleteInput'
 
 interface ActivityModalProps {
   isOpen: boolean
@@ -73,11 +74,9 @@ export function ActivityModal({ isOpen, onClose }: ActivityModalProps) {
               <label htmlFor="title" className="block text-sm font-medium mb-1">
                 Activity Title *
               </label>
-              <input
-                id="title"
-                type="text"
+              <AutocompleteInput
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={setTitle}
                 placeholder="e.g., Reading, Exercise, Coding"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required

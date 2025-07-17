@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Button } from './ui/button'
+import { Button } from '@/components/ui/button'
 
 export function Navigation() {
   const pathname = usePathname()
