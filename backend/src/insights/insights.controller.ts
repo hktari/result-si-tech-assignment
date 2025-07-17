@@ -13,16 +13,16 @@ export class InsightsController {
   constructor(private readonly insightsService: InsightsService) {}
 
   @ApiOperation({ summary: 'Get activity insights and analytics data' })
-  @ApiResponse({ 
-    status: 200, 
-    description: 'Insights retrieved successfully',
-    schema: {
-      oneOf: [
-        { $ref: '#/components/schemas/InsightsTimePerTitleDto' },
-        { $ref: '#/components/schemas/InsightsTimePerTitleStackedDto' }
-      ]
-    }
-  })
+  // @ApiResponse({ 
+  //   status: 200, 
+  //   description: 'Insights retrieved successfully',
+  //   schema: {
+  //     oneOf: [
+  //       { $ref: '#/components/schemas/InsightsTimePerTitleDto' },
+  //       { $ref: '#/components/schemas/InsightsTimePerTitleStackedDto' }
+  //     ]
+  //   }
+  // })
   @ApiResponse({ status: 400, description: 'Invalid query parameters' })
   @Get()
   getInsights(@Query() query: InsightsQueryDto, @Request() req): Promise<InsightsResponseDto> {
