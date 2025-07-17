@@ -12,7 +12,7 @@ type RegisterResponseDto = components['schemas']['RegisterResponseDto'];
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({ 
-    baseUrl: '/api',
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
       // Get token from state if available
       const token = (getState() as RootState).auth?.token;
