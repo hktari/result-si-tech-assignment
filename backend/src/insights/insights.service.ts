@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { InsightsQueryDto } from './dto/insights-query.dto';
 import { Prisma } from '@prisma/client';
-import { InsightsTimePerTitle, InsightsTimePerTitleStacked } from './dto/insights-response.dto';
+import { InsightsTimePerTitleDto, InsightsTimePerTitleStackedDto, InsightsResponseDto } from './dto/insights-response.dto';
 
 @Injectable()
 export class InsightsService {
   constructor(private prisma: PrismaService) {}
 
-  async getInsights(userId: string, query: InsightsQueryDto) {
+  async getInsights(userId: string, query: InsightsQueryDto): Promise<InsightsResponseDto> {
     const { metric, start, end, interval, search } = query;
 
     // Set default date range if not provided
@@ -23,7 +23,7 @@ export class InsightsService {
 
     throw new Error('Invalid metric type');
   }
-  private async getTimePerTitle(userId: string, startDate: Date, endDate: Date, search?: string): Promise<InsightsTimePerTitle> {
+  private async getTimePerTitle(userId: string, startDate: Date, endDate: Date, search?: string): Promise<InsightsTimePerTitleDto> {
     const where: Prisma.ActivityWhereInput = {
       userId,
       timestamp: {
@@ -77,7 +77,7 @@ export class InsightsService {
     endDate: Date,
     interval: 'daily' | 'weekly' | 'monthly',
     search?: string,
-  ): Promise<InsightsTimePerTitleStacked> {
+  ): Promise<InsightsTimePerTitleStackedDto> {
     const where: Prisma.ActivityWhereInput = {
       userId,
       timestamp: {

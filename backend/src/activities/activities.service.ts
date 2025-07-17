@@ -2,13 +2,19 @@ import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/commo
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
+import { 
+  ActivityResponseDto, 
+  ActivitiesListResponseDto, 
+  ActivitySuggestionResponseDto, 
+  DeleteActivityResponseDto 
+} from './dto/activity-response.dto';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ActivitiesService {
   constructor(private prisma: PrismaService) {}
 
-  async create(userId: string, createActivityDto: CreateActivityDto) {
+  async create(userId: string, createActivityDto: CreateActivityDto): Promise<ActivityResponseDto> {
     return this.prisma.activity.create({
       data: {
         title: createActivityDto.title,
@@ -20,7 +26,7 @@ export class ActivitiesService {
     });
   }
 
-  async findAll(userId: string, search?: string, limit = 50, offset = 0) {
+  async findAll(userId: string, search?: string, limit = 50, offset = 0): Promise<ActivitiesListResponseDto> {
     const where: Prisma.ActivityWhereInput = {
       userId,
     };
@@ -51,12 +57,10 @@ export class ActivitiesService {
     return {
       activities,
       total,
-      limit,
-      offset,
     };
   }
 
-  async findOne(id: string, userId: string) {
+  async findOne(id: string, userId: string): Promise<ActivityResponseDto> {
     const activity = await this.prisma.activity.findUnique({
       where: { id },
     });
@@ -72,7 +76,7 @@ export class ActivitiesService {
     return activity;
   }
 
-  async update(id: string, userId: string, updateActivityDto: UpdateActivityDto) {
+  async update(id: string, userId: string, updateActivityDto: UpdateActivityDto): Promise<ActivityResponseDto> {
     // First check if activity exists and belongs to user
     await this.findOne(id, userId);
 
@@ -97,16 +101,21 @@ export class ActivitiesService {
     });
   }
 
-  async remove(id: string, userId: string) {
+  async remove(id: string, userId: string): Promise<DeleteActivityResponseDto> {
     // First check if activity exists and belongs to user
     await this.findOne(id, userId);
 
-    return this.prisma.activity.delete({
+    await this.prisma.activity.delete({
       where: { id },
     });
+
+    return {
+      message: 'Activity deleted successfully',
+      id,
+    };
   }
 
-  async getTodayActivities(userId: string) {
+  async getTodayActivities(userId: string): Promise<ActivityResponseDto[]> {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
@@ -124,7 +133,7 @@ export class ActivitiesService {
     });
   }
 
-  async getActivitySuggestions(userId: string, query?: string) {
+  async getActivitySuggestions(userId: string, query?: string): Promise<ActivitySuggestionResponseDto[]> {
     const where: Prisma.ActivityWhereInput = {
       userId,
     };
@@ -136,14 +145,24 @@ export class ActivitiesService {
       };
     }
 
-    const activities = await this.prisma.activity.findMany({
+    // Get activity titles with their counts
+    const titleCounts = await this.prisma.activity.groupBy({
+      by: ['title'],
       where,
-      select: { title: true },
-      distinct: ['title'],
+      _count: {
+        title: true,
+      },
+      orderBy: {
+        _count: {
+          title: 'desc',
+        },
+      },
       take: 10,
-      orderBy: { createdAt: 'desc' },
     });
 
-    return activities.map(activity => activity.title);
+    return titleCounts.map(item => ({
+      title: item.title,
+      count: item._count.title,
+    }));
   }
 }

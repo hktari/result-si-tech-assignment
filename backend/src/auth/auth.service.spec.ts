@@ -192,12 +192,14 @@ describe('AuthService', () => {
         preferences: null,
       };
       const expectedResult = {
-        id: 'user1',
-        name: inputRegisterDto.name,
-        email: inputRegisterDto.email,
-        createdAt: mockCreatedUser.createdAt,
-        updatedAt: mockCreatedUser.updatedAt,
-        preferences: null,
+        message: 'User registered successfully',
+        user: {
+          id: 'user1',
+          email: inputRegisterDto.email,
+          name: inputRegisterDto.name,
+          createdAt: mockCreatedUser.createdAt,
+          updatedAt: mockCreatedUser.updatedAt,
+        },
       };
 
       mockedBcrypt.hash.mockResolvedValue(mockHashedPassword as never);

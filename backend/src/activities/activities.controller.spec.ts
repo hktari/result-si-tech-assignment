@@ -200,14 +200,8 @@ describe('ActivitiesController', () => {
       const mockRequest = { user: { id: 'user1' } };
       const inputId = 'activity1';
       const expectedActivity = {
-        id: inputId,
-        title: 'Reading',
-        description: 'Reading books',
-        duration: 60,
-        timestamp: new Date(),
-        userId: mockRequest.user.id,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        message: 'Activity deleted successfully',
+        id: 'test-id',
       };
 
       mockActivitiesService.remove.mockResolvedValue(expectedActivity);
@@ -254,7 +248,10 @@ describe('ActivitiesController', () => {
       // Arrange
       const mockRequest = { user: { id: 'user1' } };
       const inputQuery = 'read';
-      const expectedSuggestions = ['Reading', 'Reading Books'];
+      const expectedSuggestions = [
+        { title: 'Reading', count: 5 },
+        { title: 'Reading Books', count: 3 }
+      ];
 
       mockActivitiesService.getActivitySuggestions.mockResolvedValue(expectedSuggestions);
 
@@ -273,7 +270,11 @@ describe('ActivitiesController', () => {
       // Arrange
       const mockRequest = { user: { id: 'user1' } };
       const inputQuery = undefined;
-      const expectedSuggestions = ['Reading', 'Running', 'Writing'];
+      const expectedSuggestions = [
+        { title: 'Reading', count: 10 },
+        { title: 'Running', count: 8 },
+        { title: 'Writing', count: 6 }
+      ];
 
       mockActivitiesService.getActivitySuggestions.mockResolvedValue(expectedSuggestions);
 

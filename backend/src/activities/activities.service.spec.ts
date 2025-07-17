@@ -117,27 +117,23 @@ describe('ActivitiesService', () => {
       const inputUserId = 'user1';
       const inputLimit = 10;
       const inputOffset = 0;
-      const mockActivities = [
-        {
-          id: 'activity1',
-          title: 'Reading',
-          description: 'Reading books',
-          duration: 60,
-          timestamp: new Date(),
-          userId: inputUserId,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ];
+      const mockActivity = {
+        id: 'activity1',
+        title: 'Reading',
+        description: 'Reading books',
+        duration: 60,
+        timestamp: new Date(),
+        userId: inputUserId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
       const mockTotal = 1;
       const expectedResult = {
-        activities: mockActivities,
-        total: mockTotal,
-        limit: inputLimit,
-        offset: inputOffset,
+        activities: [mockActivity],
+        total: 1,
       };
 
-      mockPrisma.activity.findMany.mockResolvedValue(mockActivities);
+      mockPrisma.activity.findMany.mockResolvedValue([mockActivity]);
       mockPrisma.activity.count.mockResolvedValue(mockTotal);
 
       // Act
@@ -331,7 +327,7 @@ describe('ActivitiesService', () => {
       const actualResult = await activitiesService.remove(inputId, inputUserId);
 
       // Assert
-      expect(actualResult).toEqual(mockActivity);
+      expect(actualResult).toEqual({ id: inputId, message: 'Activity deleted successfully' });
       expect(activitiesService.findOne).toHaveBeenCalledWith(inputId, inputUserId);
       expect(mockPrisma.activity.delete).toHaveBeenCalledWith({
         where: { id: inputId },
@@ -344,20 +340,24 @@ describe('ActivitiesService', () => {
       // Arrange
       const inputUserId = 'user1';
       const inputQuery = 'read';
-      const mockActivities = [
-        { title: 'Reading' },
-        { title: 'Reading Books' },
+      const mockGroupByResult = [
+        { title: 'Reading', _count: { title: 5 } },
+        { title: 'Reading Books', _count: { title: 3 } },
       ];
-      const expectedSuggestions = ['Reading', 'Reading Books'];
+      const expectedSuggestions = [
+        { title: 'Reading', count: 5 },
+        { title: 'Reading Books', count: 3 },
+      ];
 
-      mockPrisma.activity.findMany.mockResolvedValue(mockActivities);
+      mockPrisma.activity.groupBy.mockResolvedValue(mockGroupByResult);
 
       // Act
       const actualResult = await activitiesService.getActivitySuggestions(inputUserId, inputQuery);
 
       // Assert
       expect(actualResult).toEqual(expectedSuggestions);
-      expect(mockPrisma.activity.findMany).toHaveBeenCalledWith({
+      expect(mockPrisma.activity.groupBy).toHaveBeenCalledWith({
+        by: ['title'],
         where: {
           userId: inputUserId,
           title: {
@@ -365,32 +365,49 @@ describe('ActivitiesService', () => {
             mode: 'insensitive',
           },
         },
-        select: { title: true },
-        distinct: ['title'],
+        _count: {
+          title: true,
+        },
+        orderBy: {
+          _count: {
+            title: 'desc',
+          },
+        },
         take: 10,
-        orderBy: { createdAt: 'desc' },
       });
     });
 
     it('should return suggestions without query filter', async () => {
       // Arrange
       const inputUserId = 'user1';
-      const mockActivities = [{ title: 'Reading' }, { title: 'Running' }];
-      const expectedSuggestions = ['Reading', 'Running'];
+      const mockGroupByResult = [
+        { title: 'Reading', _count: { title: 10 } },
+        { title: 'Running', _count: { title: 8 } },
+      ];
+      const expectedSuggestions = [
+        { title: 'Reading', count: 10 },
+        { title: 'Running', count: 8 },
+      ];
 
-      mockPrisma.activity.findMany.mockResolvedValue(mockActivities);
+      mockPrisma.activity.groupBy.mockResolvedValue(mockGroupByResult);
 
       // Act
       const actualResult = await activitiesService.getActivitySuggestions(inputUserId);
 
       // Assert
       expect(actualResult).toEqual(expectedSuggestions);
-      expect(mockPrisma.activity.findMany).toHaveBeenCalledWith({
+      expect(mockPrisma.activity.groupBy).toHaveBeenCalledWith({
+        by: ['title'],
         where: { userId: inputUserId },
-        select: { title: true },
-        distinct: ['title'],
+        _count: {
+          title: true,
+        },
+        orderBy: {
+          _count: {
+            title: 'desc',
+          },
+        },
         take: 10,
-        orderBy: { createdAt: 'desc' },
       });
     });
   });

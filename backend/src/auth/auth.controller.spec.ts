@@ -45,6 +45,8 @@ describe('AuthController', () => {
           id: 'user1',
           email: inputLoginDto.email,
           name: 'Test User',
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
       };
 
@@ -82,12 +84,14 @@ describe('AuthController', () => {
         password: 'password123',
       };
       const expectedResult = {
-        id: 'user1',
-        name: inputRegisterDto.name,
-        email: inputRegisterDto.email,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        preferences: null,
+        message: 'User registered successfully',
+        user: {
+          id: 'user1',
+          name: inputRegisterDto.name,
+          email: inputRegisterDto.email,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
       };
 
       mockAuthService.register.mockResolvedValue(expectedResult);
