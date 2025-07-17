@@ -1,8 +1,5 @@
-import Image from "next/image";
-import StoreProvider from "./StoreProvider";
+import { Dashboard } from '@/components/Dashboard'
 
 export default function Home() {
-  return (
-      <h1>Home</h1>
-  );
+  return <Dashboard />
 }
