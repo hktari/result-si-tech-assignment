@@ -1,7 +1,8 @@
 - setup cypress tests
 - autocomplete inside add activity modal
+- use shadcn modal for delete confirmation
 - fix search
-- autoredirect to login page if not logged in [ok]
 - add toast notifications. Improve error messages
 - make sure mobile responsive
+- autoredirect to login page if not logged in [ok]
 - integrate shadcn ui [ok]

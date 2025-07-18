@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "api:generate-types": "npx openapi-typescript http://localhost:3001/api/docs-json -o ./src/lib/api-types.ts",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:run:headless": "cypress run --headless"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.10",
