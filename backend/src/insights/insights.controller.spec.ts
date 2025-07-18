@@ -1,12 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { InsightsController } from './insights.controller';
-import { InsightsService } from './insights.service';
-import { InsightsQueryDto } from './dto/insights-query.dto';
-import { InsightsTimePerTitleDto, InsightsTimePerTitleStackedDto } from './dto/insights-response.dto';
+import { Test, TestingModule } from '@nestjs/testing'
+import { InsightsController } from './insights.controller'
+import { InsightsService } from './insights.service'
+import { InsightsQueryDto } from './dto/insights-query.dto'
+import {
+  InsightsTimePerTitleDto,
+  InsightsTimePerTitleStackedDto,
+} from './dto/insights-response.dto'
 
 describe('InsightsController', () => {
-  let insightsController: InsightsController;
-  let mockInsightsService: jest.Mocked<InsightsService>;
+  let insightsController: InsightsController
+  let mockInsightsService: jest.Mocked<InsightsService>
 
   beforeEach(async () => {
     // Arrange - Create test module with mocked dependencies
@@ -15,30 +18,30 @@ describe('InsightsController', () => {
       useValue: {
         getInsights: jest.fn(),
       },
-    };
+    }
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [InsightsController],
       providers: [mockInsightsServiceProvider],
-    }).compile();
+    }).compile()
 
-    insightsController = module.get<InsightsController>(InsightsController);
-    mockInsightsService = module.get(InsightsService);
-  });
+    insightsController = module.get<InsightsController>(InsightsController)
+    mockInsightsService = module.get(InsightsService)
+  })
 
   afterEach(() => {
-    jest.clearAllMocks();
-  });
+    jest.clearAllMocks()
+  })
 
   describe('getInsights', () => {
     it('should return timePerTitle insights', async () => {
       // Arrange
-      const mockRequest = { user: { id: 'user1' } };
+      const mockRequest = { user: { id: 'user1' } }
       const inputQuery: InsightsQueryDto = {
         metric: 'timePerTitle',
         start: '2025-07-01T00:00:00Z',
         end: '2025-07-16T23:59:59Z',
-      };
+      }
       const expectedResult: InsightsTimePerTitleDto = {
         metric: 'timePerTitle',
         date_range: {
@@ -49,28 +52,34 @@ describe('InsightsController', () => {
           { name: 'Reading', durationMinutes: 180 },
           { name: 'Writing', durationMinutes: 120 },
         ],
-      };
+      }
 
-      mockInsightsService.getInsights.mockResolvedValue(expectedResult);
+      mockInsightsService.getInsights.mockResolvedValue(expectedResult)
 
       // Act
-      const actualResult = await insightsController.getInsights(inputQuery, mockRequest);
+      const actualResult = await insightsController.getInsights(
+        inputQuery,
+        mockRequest
+      )
 
       // Assert
-      expect(actualResult).toEqual(expectedResult);
-      expect(mockInsightsService.getInsights).toHaveBeenCalledWith(mockRequest.user.id, inputQuery);
-    });
+      expect(actualResult).toEqual(expectedResult)
+      expect(mockInsightsService.getInsights).toHaveBeenCalledWith(
+        mockRequest.user.id,
+        inputQuery
+      )
+    })
 
     it('should return timePerTitleStacked insights', async () => {
       // Arrange
-      const mockRequest = { user: { id: 'user1' } };
+      const mockRequest = { user: { id: 'user1' } }
       const inputQuery: InsightsQueryDto = {
         metric: 'timePerTitleStacked',
         start: '2025-07-01T00:00:00Z',
         end: '2025-07-16T23:59:59Z',
         interval: 'daily',
-      };
-      const expectedResult : InsightsTimePerTitleStackedDto = {
+      }
+      const expectedResult: InsightsTimePerTitleStackedDto = {
         metric: 'timePerTitleStacked',
         date_range: {
           from: '2025-07-01',
@@ -89,45 +98,59 @@ describe('InsightsController', () => {
             Writing: 30,
           },
         ],
-      };
+      }
 
-      mockInsightsService.getInsights.mockResolvedValue(expectedResult);
+      mockInsightsService.getInsights.mockResolvedValue(expectedResult)
 
       // Act
-      const actualResult = await insightsController.getInsights(inputQuery, mockRequest);
+      const actualResult = await insightsController.getInsights(
+        inputQuery,
+        mockRequest
+      )
 
       // Assert
-      expect(actualResult).toEqual(expectedResult);
-      expect(mockInsightsService.getInsights).toHaveBeenCalledWith(mockRequest.user.id, inputQuery);
-    });
+      expect(actualResult).toEqual(expectedResult)
+      expect(mockInsightsService.getInsights).toHaveBeenCalledWith(
+        mockRequest.user.id,
+        inputQuery
+      )
+    })
 
     it('should handle insights with search filter', async () => {
       // Arrange
-      const mockRequest = { user: { id: 'user1' } };
+      const mockRequest = { user: { id: 'user1' } }
       const inputQuery: InsightsQueryDto = {
         metric: 'timePerTitle',
         search: 'reading',
-      };
+      }
       const expectedResult: InsightsTimePerTitleDto = {
         metric: 'timePerTitle',
         date_range: {
-          from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split('T')[0],
           to: new Date().toISOString().split('T')[0],
         },
         data: [
           { name: 'Reading', durationMinutes: 180 },
           { name: 'Reading Books', durationMinutes: 90 },
         ],
-      };
+      }
 
-      mockInsightsService.getInsights.mockResolvedValue(expectedResult);
+      mockInsightsService.getInsights.mockResolvedValue(expectedResult)
 
       // Act
-      const actualResult = await insightsController.getInsights(inputQuery, mockRequest);
+      const actualResult = await insightsController.getInsights(
+        inputQuery,
+        mockRequest
+      )
 
       // Assert
-      expect(actualResult).toEqual(expectedResult);
-      expect(mockInsightsService.getInsights).toHaveBeenCalledWith(mockRequest.user.id, inputQuery);
-    });
-  });
-});
+      expect(actualResult).toEqual(expectedResult)
+      expect(mockInsightsService.getInsights).toHaveBeenCalledWith(
+        mockRequest.user.id,
+        inputQuery
+      )
+    })
+  })
+})

@@ -1,34 +1,34 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger'
 
 export class UserResponseDto {
   @ApiProperty({ description: 'User ID' })
-  id: string;
+  id: string
 
   @ApiProperty({ description: 'User email' })
-  email: string;
+  email: string
 
   @ApiProperty({ description: 'User name', required: false })
-  name?: string;
+  name?: string
 
   @ApiProperty({ description: 'Account creation timestamp' })
-  createdAt: Date;
+  createdAt: Date
 
   @ApiProperty({ description: 'Last update timestamp' })
-  updatedAt: Date;
+  updatedAt: Date
 }
 
 export class LoginResponseDto {
   @ApiProperty({ description: 'JWT access token' })
-  access_token: string;
+  access_token: string
 
   @ApiProperty({ description: 'User information' })
-  user: UserResponseDto;
+  user: UserResponseDto
 }
 
 export class RegisterResponseDto {
   @ApiProperty({ description: 'Success message' })
-  message: string;
+  message: string
 
   @ApiProperty({ description: 'Created user information' })
-  user: UserResponseDto;
+  user: UserResponseDto
 }

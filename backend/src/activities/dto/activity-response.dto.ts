@@ -1,51 +1,54 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger'
 
 export class ActivityResponseDto {
   @ApiProperty({ description: 'Activity ID' })
-  id: string;
+  id: string
 
   @ApiProperty({ description: 'Activity title' })
-  title: string;
+  title: string
 
   @ApiProperty({ description: 'Activity description', required: false })
-  description?: string;
+  description?: string
 
   @ApiProperty({ description: 'Activity duration in minutes' })
-  duration: number;
+  duration: number
 
   @ApiProperty({ description: 'Activity timestamp' })
-  timestamp: Date;
+  timestamp: Date
 
   @ApiProperty({ description: 'User ID who created the activity' })
-  userId: string;
+  userId: string
 
   @ApiProperty({ description: 'Creation timestamp' })
-  createdAt: Date;
+  createdAt: Date
 
   @ApiProperty({ description: 'Last update timestamp' })
-  updatedAt: Date;
+  updatedAt: Date
 }
 
 export class ActivitiesListResponseDto {
-  @ApiProperty({ type: [ActivityResponseDto], description: 'List of activities' })
-  activities: ActivityResponseDto[];
+  @ApiProperty({
+    type: [ActivityResponseDto],
+    description: 'List of activities',
+  })
+  activities: ActivityResponseDto[]
 
   @ApiProperty({ description: 'Total number of activities' })
-  total: number;
+  total: number
 }
 
 export class ActivitySuggestionResponseDto {
   @ApiProperty({ description: 'Suggested activity title' })
-  title: string;
+  title: string
 
   @ApiProperty({ description: 'Number of times this activity was used' })
-  count: number;
+  count: number
 }
 
 export class DeleteActivityResponseDto {
   @ApiProperty({ description: 'Success message' })
-  message: string;
+  message: string
 
   @ApiProperty({ description: 'Deleted activity ID' })
-  id: string;
+  id: string
 }

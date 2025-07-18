@@ -1,12 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ConflictException, NotFoundException } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { PrismaService } from '../prisma/prisma.service';
-import { mockPrismaService } from '../test/setup';
+import { Test, TestingModule } from '@nestjs/testing'
+import { ConflictException, NotFoundException } from '@nestjs/common'
+import { UsersService } from './users.service'
+import { PrismaService } from '../prisma/prisma.service'
+import { mockPrismaService } from '../test/setup'
 
 describe('UsersService', () => {
-  let usersService: UsersService;
-  let mockPrisma: typeof mockPrismaService;
+  let usersService: UsersService
+  let mockPrisma: typeof mockPrismaService
 
   beforeEach(async () => {
     // Arrange - Create test module with mocked dependencies
@@ -18,15 +18,15 @@ describe('UsersService', () => {
           useValue: mockPrismaService,
         },
       ],
-    }).compile();
+    }).compile()
 
-    usersService = module.get<UsersService>(UsersService);
-    mockPrisma = module.get(PrismaService);
-  });
+    usersService = module.get<UsersService>(UsersService)
+    mockPrisma = module.get(PrismaService)
+  })
 
   afterEach(() => {
-    jest.clearAllMocks();
-  });
+    jest.clearAllMocks()
+  })
 
   describe('create', () => {
     it('should create user successfully', async () => {
@@ -36,7 +36,7 @@ describe('UsersService', () => {
         name: 'Test User',
         password: 'hashedPassword123',
         preferences: { theme: 'light' },
-      };
+      }
       const expectedUser = {
         id: 'user1',
         email: inputUserData.email,
@@ -44,15 +44,15 @@ describe('UsersService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         preferences: inputUserData.preferences,
-      };
+      }
 
-      mockPrisma.user.create.mockResolvedValue(expectedUser);
+      mockPrisma.user.create.mockResolvedValue(expectedUser)
 
       // Act
-      const actualResult = await usersService.create(inputUserData);
+      const actualResult = await usersService.create(inputUserData)
 
       // Assert
-      expect(actualResult).toEqual(expectedUser);
+      expect(actualResult).toEqual(expectedUser)
       expect(mockPrisma.user.create).toHaveBeenCalledWith({
         data: {
           email: inputUserData.email,
@@ -60,8 +60,8 @@ describe('UsersService', () => {
           password: inputUserData.password,
           preferences: inputUserData.preferences,
         },
-      });
-    });
+      })
+    })
 
     it('should throw ConflictException when email already exists', async () => {
       // Arrange
@@ -69,13 +69,15 @@ describe('UsersService', () => {
         email: 'existing@example.com',
         name: 'Test User',
         password: 'hashedPassword123',
-      };
-      const mockError = { code: 'P2002' };
+      }
+      const mockError = { code: 'P2002' }
 
-      mockPrisma.user.create.mockRejectedValue(mockError);
+      mockPrisma.user.create.mockRejectedValue(mockError)
 
       // Act & Assert
-      await expect(usersService.create(inputUserData)).rejects.toThrow(ConflictException);
+      await expect(usersService.create(inputUserData)).rejects.toThrow(
+        ConflictException
+      )
       expect(mockPrisma.user.create).toHaveBeenCalledWith({
         data: {
           email: inputUserData.email,
@@ -83,8 +85,8 @@ describe('UsersService', () => {
           password: inputUserData.password,
           preferences: undefined,
         },
-      });
-    });
+      })
+    })
 
     it('should rethrow other database errors', async () => {
       // Arrange
@@ -92,20 +94,22 @@ describe('UsersService', () => {
         email: 'test@example.com',
         name: 'Test User',
         password: 'hashedPassword123',
-      };
-      const mockError = new Error('Database connection failed');
+      }
+      const mockError = new Error('Database connection failed')
 
-      mockPrisma.user.create.mockRejectedValue(mockError);
+      mockPrisma.user.create.mockRejectedValue(mockError)
 
       // Act & Assert
-      await expect(usersService.create(inputUserData)).rejects.toThrow('Database connection failed');
-    });
-  });
+      await expect(usersService.create(inputUserData)).rejects.toThrow(
+        'Database connection failed'
+      )
+    })
+  })
 
   describe('findByEmail', () => {
     it('should return user when found', async () => {
       // Arrange
-      const inputEmail = 'test@example.com';
+      const inputEmail = 'test@example.com'
       const expectedUser = {
         id: 'user1',
         email: inputEmail,
@@ -114,41 +118,41 @@ describe('UsersService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         preferences: null,
-      };
+      }
 
-      mockPrisma.user.findUnique.mockResolvedValue(expectedUser);
+      mockPrisma.user.findUnique.mockResolvedValue(expectedUser)
 
       // Act
-      const actualResult = await usersService.findByEmail(inputEmail);
+      const actualResult = await usersService.findByEmail(inputEmail)
 
       // Assert
-      expect(actualResult).toEqual(expectedUser);
+      expect(actualResult).toEqual(expectedUser)
       expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
         where: { email: inputEmail },
-      });
-    });
+      })
+    })
 
     it('should return null when user not found', async () => {
       // Arrange
-      const inputEmail = 'nonexistent@example.com';
+      const inputEmail = 'nonexistent@example.com'
 
-      mockPrisma.user.findUnique.mockResolvedValue(null);
+      mockPrisma.user.findUnique.mockResolvedValue(null)
 
       // Act
-      const actualResult = await usersService.findByEmail(inputEmail);
+      const actualResult = await usersService.findByEmail(inputEmail)
 
       // Assert
-      expect(actualResult).toBeNull();
+      expect(actualResult).toBeNull()
       expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
         where: { email: inputEmail },
-      });
-    });
-  });
+      })
+    })
+  })
 
   describe('findById', () => {
     it('should return user when found', async () => {
       // Arrange
-      const inputId = 'user1';
+      const inputId = 'user1'
       const expectedUser = {
         id: inputId,
         email: 'test@example.com',
@@ -157,39 +161,41 @@ describe('UsersService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         preferences: null,
-      };
+      }
 
-      mockPrisma.user.findUnique.mockResolvedValue(expectedUser);
+      mockPrisma.user.findUnique.mockResolvedValue(expectedUser)
 
       // Act
-      const actualResult = await usersService.findById(inputId);
+      const actualResult = await usersService.findById(inputId)
 
       // Assert
-      expect(actualResult).toEqual(expectedUser);
+      expect(actualResult).toEqual(expectedUser)
       expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
         where: { id: inputId },
-      });
-    });
+      })
+    })
 
     it('should throw NotFoundException when user not found', async () => {
       // Arrange
-      const inputId = 'nonexistent-user';
+      const inputId = 'nonexistent-user'
 
-      mockPrisma.user.findUnique.mockResolvedValue(null);
+      mockPrisma.user.findUnique.mockResolvedValue(null)
 
       // Act & Assert
-      await expect(usersService.findById(inputId)).rejects.toThrow(NotFoundException);
+      await expect(usersService.findById(inputId)).rejects.toThrow(
+        NotFoundException
+      )
       expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
         where: { id: inputId },
-      });
-    });
-  });
+      })
+    })
+  })
 
   describe('update', () => {
     it('should update user successfully', async () => {
       // Arrange
-      const inputId = 'user1';
-      const inputUpdateData = { name: 'Updated Name' };
+      const inputId = 'user1'
+      const inputUpdateData = { name: 'Updated Name' }
       const expectedUser = {
         id: inputId,
         email: 'test@example.com',
@@ -198,19 +204,19 @@ describe('UsersService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         preferences: null,
-      };
+      }
 
-      mockPrisma.user.update.mockResolvedValue(expectedUser);
+      mockPrisma.user.update.mockResolvedValue(expectedUser)
 
       // Act
-      const actualResult = await usersService.update(inputId, inputUpdateData);
+      const actualResult = await usersService.update(inputId, inputUpdateData)
 
       // Assert
-      expect(actualResult).toEqual(expectedUser);
+      expect(actualResult).toEqual(expectedUser)
       expect(mockPrisma.user.update).toHaveBeenCalledWith({
         where: { id: inputId },
         data: inputUpdateData,
-      });
-    });
-  });
-});
+      })
+    })
+  })
+})

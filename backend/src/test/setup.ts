@@ -1,13 +1,13 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client'
 
 // Global test setup
 beforeAll(async () => {
   // Setup test database connection if needed
-});
+})
 
 afterAll(async () => {
   // Cleanup test database if needed
-});
+})
 
 // Mock Prisma for unit tests
 export const mockPrismaService = {
@@ -29,4 +29,4 @@ export const mockPrismaService = {
   },
   $connect: jest.fn(),
   $disconnect: jest.fn(),
-};
+}

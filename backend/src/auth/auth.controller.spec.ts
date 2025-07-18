@@ -1,13 +1,13 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { UnauthorizedException } from '@nestjs/common';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
+import { Test, TestingModule } from '@nestjs/testing'
+import { UnauthorizedException } from '@nestjs/common'
+import { AuthController } from './auth.controller'
+import { AuthService } from './auth.service'
+import { LoginDto } from './dto/login.dto'
+import { RegisterDto } from './dto/register.dto'
 
 describe('AuthController', () => {
-  let authController: AuthController;
-  let mockAuthService: jest.Mocked<AuthService>;
+  let authController: AuthController
+  let mockAuthService: jest.Mocked<AuthService>
 
   beforeEach(async () => {
     // Arrange - Create test module with mocked dependencies
@@ -17,20 +17,20 @@ describe('AuthController', () => {
         login: jest.fn(),
         register: jest.fn(),
       },
-    };
+    }
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [mockAuthServiceProvider],
-    }).compile();
+    }).compile()
 
-    authController = module.get<AuthController>(AuthController);
-    mockAuthService = module.get(AuthService);
-  });
+    authController = module.get<AuthController>(AuthController)
+    mockAuthService = module.get(AuthService)
+  })
 
   afterEach(() => {
-    jest.clearAllMocks();
-  });
+    jest.clearAllMocks()
+  })
 
   describe('login', () => {
     it('should return access token and user data when login is successful', async () => {
@@ -38,7 +38,7 @@ describe('AuthController', () => {
       const inputLoginDto: LoginDto = {
         email: 'test@example.com',
         password: 'password123',
-      };
+      }
       const expectedResult = {
         access_token: 'jwt-token-123',
         user: {
@@ -48,32 +48,36 @@ describe('AuthController', () => {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-      };
+      }
 
-      mockAuthService.login.mockResolvedValue(expectedResult);
+      mockAuthService.login.mockResolvedValue(expectedResult)
 
       // Act
-      const actualResult = await authController.login(inputLoginDto);
+      const actualResult = await authController.login(inputLoginDto)
 
       // Assert
-      expect(actualResult).toEqual(expectedResult);
-      expect(mockAuthService.login).toHaveBeenCalledWith(inputLoginDto);
-    });
+      expect(actualResult).toEqual(expectedResult)
+      expect(mockAuthService.login).toHaveBeenCalledWith(inputLoginDto)
+    })
 
     it('should throw UnauthorizedException when login fails', async () => {
       // Arrange
       const inputLoginDto: LoginDto = {
         email: 'test@example.com',
         password: 'wrongpassword',
-      };
+      }
 
-      mockAuthService.login.mockRejectedValue(new UnauthorizedException('Invalid credentials'));
+      mockAuthService.login.mockRejectedValue(
+        new UnauthorizedException('Invalid credentials')
+      )
 
       // Act & Assert
-      await expect(authController.login(inputLoginDto)).rejects.toThrow(UnauthorizedException);
-      expect(mockAuthService.login).toHaveBeenCalledWith(inputLoginDto);
-    });
-  });
+      await expect(authController.login(inputLoginDto)).rejects.toThrow(
+        UnauthorizedException
+      )
+      expect(mockAuthService.login).toHaveBeenCalledWith(inputLoginDto)
+    })
+  })
 
   describe('register', () => {
     it('should return user data when registration is successful', async () => {
@@ -82,7 +86,7 @@ describe('AuthController', () => {
         name: 'New User',
         email: 'newuser@example.com',
         password: 'password123',
-      };
+      }
       const expectedResult = {
         message: 'User registered successfully',
         user: {
@@ -92,18 +96,18 @@ describe('AuthController', () => {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-      };
+      }
 
-      mockAuthService.register.mockResolvedValue(expectedResult);
+      mockAuthService.register.mockResolvedValue(expectedResult)
 
       // Act
-      const actualResult = await authController.register(inputRegisterDto);
+      const actualResult = await authController.register(inputRegisterDto)
 
       // Assert
-      expect(actualResult).toEqual(expectedResult);
-      expect(mockAuthService.register).toHaveBeenCalledWith(inputRegisterDto);
-    });
-  });
+      expect(actualResult).toEqual(expectedResult)
+      expect(mockAuthService.register).toHaveBeenCalledWith(inputRegisterDto)
+    })
+  })
 
   describe('getProfile', () => {
     it('should return user profile from request', () => {
@@ -114,14 +118,14 @@ describe('AuthController', () => {
           email: 'test@example.com',
           name: 'Test User',
         },
-      };
-      const expectedResult = mockRequest.user;
+      }
+      const expectedResult = mockRequest.user
 
       // Act
-      const actualResult = authController.getProfile(mockRequest);
+      const actualResult = authController.getProfile(mockRequest)
 
       // Assert
-      expect(actualResult).toEqual(expectedResult);
-    });
-  });
-});
+      expect(actualResult).toEqual(expectedResult)
+    })
+  })
+})
