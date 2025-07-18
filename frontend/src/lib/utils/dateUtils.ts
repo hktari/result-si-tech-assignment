@@ -6,14 +6,14 @@ export function dateRangeToStartEnd(dateRange: string): {
   end: string
 } {
   const now = new Date()
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const today = new Date()
 
   let start: Date
   let end: Date = new Date(today.getTime() + 24 * 60 * 60 * 1000 - 1) // End of today
 
   switch (dateRange) {
     case 'today':
-      start = new Date(today)
+      start = today
       break
 
     case 'yesterday':

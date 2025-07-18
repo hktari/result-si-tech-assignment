@@ -24,6 +24,7 @@ import {
   useGetActivitiesQuery,
   useGetInsightsQuery,
 } from '@/lib/features/activities/activitiesApi'
+import { dateRangeToStartEnd } from '@/lib/utils/dateUtils'
 
 import { ActivityList } from './ActivityList'
 import { ActivityModal } from './ActivityModal'
@@ -43,6 +44,8 @@ export function Dashboard() {
   } = useGetActivitiesQuery({ limit: '10' })
   const { data: insightsData } = useGetInsightsQuery({
     metric: 'timePerTitle',
+    interval: 'daily',
+    ...dateRangeToStartEnd('today'),
   })
 
   const originalActivities = activitiesData?.activities || []
