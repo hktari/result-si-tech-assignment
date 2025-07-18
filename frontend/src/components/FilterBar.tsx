@@ -13,6 +13,7 @@ interface FilterBarProps {
   onFilterChange: (filters: FilterBarProps['filters']) => void
 }
 
+
 export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
   const dateRangeOptions = [
     { value: 'today', label: 'Today' },
@@ -66,22 +67,24 @@ export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
             </select>
           </div>
 
-          {/* Interval Selector */}
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium">Interval:</label>
-            <div className="flex gap-1">
-              {intervalOptions.map((option) => (
-                <Button
-                  key={option.value}
-                  variant={filters.interval === option.value ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => handleIntervalChange(option.value)}
-                >
-                  {option.label}
-                </Button>
-              ))}
+          {/* Interval Selector (only show when metric is timePerTitleStacked) */}
+          {filters.metric === 'timePerTitleStacked' && (
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Interval:</label>
+              <div className="flex gap-1">
+                {intervalOptions.map((option) => (
+                  <Button
+                    key={option.value}
+                    variant={filters.interval === option.value ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => handleIntervalChange(option.value)}
+                  >
+                    {option.label}
+                  </Button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Metric Selector */}
           <div className="flex items-center gap-2">

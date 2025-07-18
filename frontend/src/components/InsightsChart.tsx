@@ -12,42 +12,17 @@ import {
   Legend 
 } from 'recharts'
 
-interface InsightsChartProps {
-  data: Array<{
-    date?: string
-    week?: string
-    month?: string
-    totalDuration?: number
-    activityCount?: number
-    [key: string]: any
-  }>
-  metric: 'timePerTitle' | 'timePerTitleStacked'
-  interval: 'daily' | 'weekly' | 'monthly'
-}
 
-export function InsightsChart({ data, metric }: InsightsChartProps) {
-  // Transform data for timePerTitle metric
-  const transformTimePerTitleData = (rawData: InsightsChartProps['data']) => {
-    // For timePerTitle, we need to aggregate by activity title
-    const activityTotals: { [key: string]: number } = {}
-    
-    rawData.forEach(item => {
-      Object.keys(item).forEach(key => {
-        if (key !== 'date' && key !== 'week' && key !== 'month' && key !== 'totalDuration' && key !== 'activityCount') {
-          activityTotals[key] = (activityTotals[key] || 0) + (item[key] || 0)
-        }
-      })
-    })
+import { InsightsResponseDto } from '@/lib/features/activities/activitiesApi'
 
-    return Object.entries(activityTotals).map(([name, durationMinutes]) => ({
-      name,
-      durationMinutes
-    }))
-  }
 
-  // Transform data for timePerTitleStacked metric
-  const transformStackedData = (rawData: InsightsChartProps['data']) => {
-    return rawData.map(item => {
+
+export function InsightsChart({ data, metric }: InsightsResponseDto ) {
+
+  const transformStackedData = (rawData: any) => {
+    // TODO: Improve insights response typing using swagger
+    // @ts-expect-error: Disabling type checking for this until we have better swagger typing
+    return rawData?.map(item => {
       const dateKey = item.date || item.week || item.month
       const transformed: Record<string, any> = {
         period: dateKey,
@@ -63,20 +38,30 @@ export function InsightsChart({ data, metric }: InsightsChartProps) {
   }
 
   const chartData = metric === 'timePerTitle' 
-    ? transformTimePerTitleData(data)
+    ? data
     : transformStackedData(data)
 
-  // Get unique activity names for stacked chart colors
-  const activityNames = metric === 'timePerTitleStacked' 
-    ? Array.from(new Set(
-        data.flatMap(item => 
+  // Extract unique activity names for chart colors
+  const getActivityNames = (data: InsightsResponseDto['data'], metric: string): string[] => {
+    if (metric === 'timePerTitleStacked') {
+      return Array.from(new Set(
+        data?.flatMap(item => 
           Object.keys(item).filter(key => 
             key !== 'date' && key !== 'week' && key !== 'month' && 
             key !== 'totalDuration' && key !== 'activityCount'
           )
-        )
+        ) || []
       ))
-    : []
+    }else if (metric === 'timePerTitle') {
+      return Array.from(new Set(
+        data?.map(item => item.name).filter((name): name is string => name !== undefined) || []
+      ))
+    }
+    return []
+  }
+
+  const activityNames = getActivityNames(data, metric!)
+
 
   // Color palette for different activities
   const colors = [

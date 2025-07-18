@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { components, operations } from '../../api-types'
 
-type ActivityResponseDto = components['schemas']['ActivityResponseDto']
-type CreateActivityDto = components['schemas']['CreateActivityDto']
-type UpdateActivityDto = components['schemas']['UpdateActivityDto']
-type ActivitiesListResponseDto = components['schemas']['ActivitiesListResponseDto']
-type InsightsParams = operations['InsightsController_getInsights']['parameters']['query']
-type InsightsResponseDto = operations['InsightsController_getInsights']['responses']['200']['content']['application/json']
-type GetActivitiesParams = operations['ActivitiesController_findAll']['parameters']['query']
+export type ActivityResponseDto = components['schemas']['ActivityResponseDto']
+export type CreateActivityDto = components['schemas']['CreateActivityDto']
+export type UpdateActivityDto = components['schemas']['UpdateActivityDto']
+export type ActivitiesListResponseDto = components['schemas']['ActivitiesListResponseDto']
+export type InsightsParams = operations['InsightsController_getInsights']['parameters']['query']
+export type InsightsResponseDto = operations['InsightsController_getInsights']['responses']['200']['content']['application/json']
+export type GetActivitiesParams = operations['ActivitiesController_findAll']['parameters']['query']
 
 export const activitiesApi = createApi({
   reducerPath: 'activitiesApi',

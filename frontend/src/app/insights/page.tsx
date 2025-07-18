@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { FilterBar } from '@/components/FilterBar'
 import { InsightsChart } from '@/components/InsightsChart'
 import { useGetInsightsQuery } from '@/lib/features/activities/activitiesApi'
+import { dateRangeToStartEnd } from '@/lib/utils/dateUtils'
 
 export default function InsightsPage() {
   const [filters, setFilters] = useState({
@@ -13,9 +14,13 @@ export default function InsightsPage() {
     metric: 'timePerTitle' as 'timePerTitle' | 'timePerTitleStacked'
   })
 
+  const { start, end } = dateRangeToStartEnd(filters.dateRange)
+  
   const { data: insightsData, isLoading, error } = useGetInsightsQuery({
     metric: filters.metric,
-    interval: filters.interval
+    interval: filters.interval,
+    start,
+    end
   })
 
   const handleFilterChange = (newFilters: typeof filters) => {
@@ -70,10 +75,7 @@ export default function InsightsPage() {
               </p>
             </div>
           ) : (
-            <InsightsChart 
-              data={insightsData.data} 
-              metric={filters.metric}
-              interval={filters.interval}
+            <InsightsChart {...insightsData}
             />
           )}
         </CardContent>
