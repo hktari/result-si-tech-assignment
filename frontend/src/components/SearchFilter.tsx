@@ -1,32 +1,37 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { components } from '@/lib/api-types'
-import { useGetActivitiesQuery } from '@/lib/features/activities/activitiesApi'
+import { useFilterActivitiesQuery } from '@/lib/features/activities/activitiesApi'
 
 type ActivityResponseDto = components['schemas']['ActivityResponseDto']
 
 interface SearchFilterProps {
   onSearchResults: (activities: ActivityResponseDto[]) => void
+  onClearSearch?: () => void
 }
 
-export function SearchFilter({ onSearchResults }: SearchFilterProps) {
+export function SearchFilter({
+  onSearchResults,
+  onClearSearch,
+}: SearchFilterProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+  const previousSearchTerm = useRef('')
 
   // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm)
-    }, 300)
+    }, 100)
 
     return () => clearTimeout(timer)
   }, [searchTerm])
 
-  const { data: searchResults, isLoading } = useGetActivitiesQuery(
+  const { data: searchResults, isLoading } = useFilterActivitiesQuery(
     {
       search: debouncedSearchTerm,
       limit: '50',
@@ -37,15 +42,28 @@ export function SearchFilter({ onSearchResults }: SearchFilterProps) {
   )
 
   useEffect(() => {
-    if (searchResults?.activities) {
-      onSearchResults(searchResults.activities)
+    const currentSearchTerm = debouncedSearchTerm
+    const prevSearchTerm = previousSearchTerm.current
+
+    // Only call callbacks when there's an actual change
+    if (currentSearchTerm !== prevSearchTerm) {
+      if (currentSearchTerm && searchResults?.activities) {
+        onSearchResults(searchResults.activities)
+      } else if (!currentSearchTerm && prevSearchTerm) {
+        // Search was cleared
+        onSearchResults([])
+        onClearSearch?.()
+      }
+
+      previousSearchTerm.current = currentSearchTerm
     }
-  }, [searchResults, onSearchResults])
+  }, [debouncedSearchTerm, searchResults, onSearchResults, onClearSearch])
 
   const handleClearSearch = () => {
     setSearchTerm('')
     setDebouncedSearchTerm('')
     onSearchResults([])
+    onClearSearch?.()
   }
 
   return (

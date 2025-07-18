@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import {
+  ActivityResponseDto,
   useGetActivitiesQuery,
   useGetInsightsQuery,
 } from '@/lib/features/activities/activitiesApi'
@@ -32,6 +33,9 @@ import { SearchFilter } from './SearchFilter'
 
 export function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [searchResults, setSearchResults] = useState<ActivityResponseDto[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+
   const {
     data: activitiesData,
     isLoading,
@@ -41,7 +45,18 @@ export function Dashboard() {
     metric: 'timePerTitle',
   })
 
-  const recentActivities = activitiesData?.activities || []
+  const originalActivities = activitiesData?.activities || []
+  const displayedActivities = isSearching ? searchResults : originalActivities
+
+  const handleSearchResults = (results: ActivityResponseDto[]) => {
+    setSearchResults(results)
+    setIsSearching(results.length > 0)
+  }
+
+  const handleClearSearch = () => {
+    setSearchResults([])
+    setIsSearching(false)
+  }
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -81,30 +96,40 @@ export function Dashboard() {
       </Card>
 
       {/* Search Filter */}
-      {/* TODO: review search */}
-      <SearchFilter onSearchResults={() => {}} />
+      <SearchFilter
+        onSearchResults={handleSearchResults}
+        onClearSearch={handleClearSearch}
+      />
 
       {/* Recent Activities */}
       <Card>
         <CardHeader>
-          <CardTitle>Recent Activities</CardTitle>
-          <CardDescription>Your latest logged activities</CardDescription>
+          <CardTitle>
+            {isSearching ? 'Search Results' : 'Recent Activities'}
+          </CardTitle>
+          <CardDescription>
+            {isSearching
+              ? `Found ${searchResults.length} matching activities`
+              : 'Your latest logged activities'}
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          {isLoading ? (
+          {isLoading && !isSearching ? (
             <div className="flex items-center justify-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
             </div>
-          ) : error ? (
+          ) : error && !isSearching ? (
             <div className="text-center py-8 text-red-500">
               Error loading activities. Please try again.
             </div>
-          ) : recentActivities.length === 0 ? (
+          ) : displayedActivities.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              No activities logged yet. Start by logging your first activity!
+              {isSearching
+                ? 'No activities found matching your search.'
+                : 'No activities logged yet. Start by logging your first activity!'}
             </div>
           ) : (
-            <ActivityList activities={recentActivities} />
+            <ActivityList activities={displayedActivities} />
           )}
         </CardContent>
       </Card>

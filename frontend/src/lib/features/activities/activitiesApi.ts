@@ -31,8 +31,18 @@ export const activitiesApi = createApi({
       return headers
     },
   }),
-  tagTypes: ['Activity', 'Insights'],
+  tagTypes: ['Activity', 'Insights', 'FilteredActivity'],
   endpoints: builder => ({
+    filterActivities: builder.query<
+      ActivitiesListResponseDto,
+      GetActivitiesParams
+    >({
+      query: params => ({
+        url: 'activities',
+        params,
+      }),
+      providesTags: ['FilteredActivity'],
+    }),
     getActivities: builder.query<
       ActivitiesListResponseDto,
       GetActivitiesParams
@@ -49,7 +59,7 @@ export const activitiesApi = createApi({
         method: 'POST',
         body: newActivity,
       }),
-      invalidatesTags: ['Activity', 'Insights'],
+      invalidatesTags: ['Activity', 'Insights', 'FilteredActivity'],
     }),
     updateActivity: builder.mutation<
       ActivityResponseDto,
@@ -60,14 +70,14 @@ export const activitiesApi = createApi({
         method: 'PATCH',
         body: params.updates,
       }),
-      invalidatesTags: ['Activity', 'Insights'],
+      invalidatesTags: ['Activity', 'Insights', 'FilteredActivity'],
     }),
     deleteActivity: builder.mutation<void, string>({
       query: id => ({
         url: `activities/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Activity', 'Insights'],
+      invalidatesTags: ['Activity', 'Insights', 'FilteredActivity'],
     }),
     getInsights: builder.query<InsightsResponseDto, InsightsParams>({
       query: params => ({
@@ -90,6 +100,7 @@ export const activitiesApi = createApi({
 })
 
 export const {
+  useFilterActivitiesQuery,
   useGetActivitiesQuery,
   useCreateActivityMutation,
   useUpdateActivityMutation,
