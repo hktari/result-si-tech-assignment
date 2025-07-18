@@ -1,9 +1,16 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+
 import { FilterBar } from '@/components/FilterBar'
 import { InsightsChart } from '@/components/InsightsChart'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { useGetInsightsQuery } from '@/lib/features/activities/activitiesApi'
 import { dateRangeToStartEnd } from '@/lib/utils/dateUtils'
 
@@ -11,16 +18,20 @@ export default function InsightsPage() {
   const [filters, setFilters] = useState({
     dateRange: 'last7days',
     interval: 'daily' as 'daily' | 'weekly' | 'monthly',
-    metric: 'timePerTitle' as 'timePerTitle' | 'timePerTitleStacked'
+    metric: 'timePerTitle' as 'timePerTitle' | 'timePerTitleStacked',
   })
 
   const { start, end } = dateRangeToStartEnd(filters.dateRange)
-  
-  const { data: insightsData, isLoading, error } = useGetInsightsQuery({
+
+  const {
+    data: insightsData,
+    isLoading,
+    error,
+  } = useGetInsightsQuery({
     metric: filters.metric,
     interval: filters.interval,
     start,
-    end
+    end,
   })
 
   const handleFilterChange = (newFilters: typeof filters) => {
@@ -46,13 +57,22 @@ export default function InsightsPage() {
       <Card>
         <CardHeader>
           <CardTitle>
-            {filters.metric === 'timePerTitle' ? 'Time per Activity' : 'Time per Activity (Stacked)'}
+            {filters.metric === 'timePerTitle'
+              ? 'Time per Activity'
+              : 'Time per Activity (Stacked)'}
           </CardTitle>
           <CardDescription>
-            {filters.interval.charAt(0).toUpperCase() + filters.interval.slice(1)} view
+            {filters.interval.charAt(0).toUpperCase() +
+              filters.interval.slice(1)}{' '}
+            view
             {insightsData && (
               <span className="ml-2 text-sm font-medium">
-                • Total: {insightsData.data?.reduce((sum, item) => sum + (item.durationMinutes || 0), 0) || 0} minutes
+                • Total:{' '}
+                {insightsData.data?.reduce(
+                  (sum, item) => sum + (item.durationMinutes || 0),
+                  0
+                ) || 0}{' '}
+                minutes
               </span>
             )}
           </CardDescription>
@@ -69,14 +89,15 @@ export default function InsightsPage() {
             </div>
           ) : !insightsData?.data || insightsData.data.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-muted-foreground mb-2">No data available</div>
+              <div className="text-muted-foreground mb-2">
+                No data available
+              </div>
               <p className="text-sm text-muted-foreground">
                 Start logging activities to see insights
               </p>
             </div>
           ) : (
-            <InsightsChart {...insightsData}
-            />
+            <InsightsChart {...insightsData} />
           )}
         </CardContent>
       </Card>

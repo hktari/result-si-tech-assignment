@@ -8,6 +8,8 @@
     "start": "next start",
     "api:generate-types": "npx openapi-typescript http://localhost:3001/api/docs-json -o ./src/lib/api-types.ts",
     "lint": "next lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cypress:run:headless": "cypress run --headless"
@@ -38,6 +40,7 @@
     "@cypress/webpack-preprocessor": "^6.0.4",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -46,6 +49,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.4.1",
     "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
     "tailwindcss": "^4.1.11",
     "typescript": "^5"
   }

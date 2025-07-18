@@ -1,8 +1,10 @@
 'use client'
 
 import React from 'react'
+
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+
 import { Button } from '@/components/ui/button'
 
 export function Navigation() {
@@ -10,7 +12,7 @@ export function Navigation() {
 
   const navItems = [
     { href: '/', label: 'Dashboard' },
-    { href: '/insights', label: 'Insights' }
+    { href: '/insights', label: 'Insights' },
   ]
 
   return (
@@ -22,7 +24,7 @@ export function Navigation() {
               Activity Journal
             </Link>
             <div className="flex space-x-2">
-              {navItems.map((item) => (
+              {navItems.map(item => (
                 <Link key={item.href} href={item.href}>
                   <Button
                     variant={pathname === item.href ? 'default' : 'ghost'}

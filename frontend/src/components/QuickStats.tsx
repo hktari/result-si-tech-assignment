@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useGetActivitiesQuery } from '@/lib/features/activities/activitiesApi'
 
@@ -10,14 +11,17 @@ export function QuickStats() {
 
   const activities = activitiesData?.activities || []
   const totalActivities = activities.length
-  const totalMinutes = activities.reduce((sum, activity) => sum + activity.duration, 0)
-  const totalHours = Math.round(totalMinutes / 60 * 10) / 10
+  const totalMinutes = activities.reduce(
+    (sum, activity) => sum + activity.duration,
+    0
+  )
+  const totalHours = Math.round((totalMinutes / 60) * 10) / 10
 
   // Calculate activities this week
   const oneWeekAgo = new Date()
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
-  const thisWeekActivities = activities.filter(activity => 
-    new Date(activity.timestamp) >= oneWeekAgo
+  const thisWeekActivities = activities.filter(
+    activity => new Date(activity.timestamp) >= oneWeekAgo
   ).length
 
   // Calculate average daily time this week
@@ -28,25 +32,25 @@ export function QuickStats() {
 
   const stats = [
     {
-      title: "Total Activities",
+      title: 'Total Activities',
       value: totalActivities.toString(),
-      description: "All time"
+      description: 'All time',
     },
     {
-      title: "Total Time",
+      title: 'Total Time',
       value: `${totalHours}h`,
-      description: "Hours logged"
+      description: 'Hours logged',
     },
     {
-      title: "This Week",
+      title: 'This Week',
       value: thisWeekActivities.toString(),
-      description: "Activities logged"
+      description: 'Activities logged',
     },
     {
-      title: "Daily Average",
+      title: 'Daily Average',
       value: `${avgDailyMinutes}m`,
-      description: "This week"
-    }
+      description: 'This week',
+    },
   ]
 
   return (
@@ -54,15 +58,11 @@ export function QuickStats() {
       {stats.map((stat, index) => (
         <Card key={index}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {stat.title}
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stat.value}</div>
-            <p className="text-xs text-muted-foreground">
-              {stat.description}
-            </p>
+            <p className="text-xs text-muted-foreground">{stat.description}</p>
           </CardContent>
         </Card>
       ))}

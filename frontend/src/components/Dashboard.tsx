@@ -1,19 +1,45 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+
 import { Button } from '@/components/ui/button'
-import { QuickStats } from './QuickStats'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import {
+  useGetActivitiesQuery,
+  useGetInsightsQuery,
+} from '@/lib/features/activities/activitiesApi'
+
 import { ActivityList } from './ActivityList'
 import { ActivityModal } from './ActivityModal'
 import { DashboardChart } from './DashboardChart'
-import { useGetActivitiesQuery, useGetInsightsQuery } from '@/lib/features/activities/activitiesApi'
+import { QuickStats } from './QuickStats'
 import { SearchFilter } from './SearchFilter'
 
 export function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { data: activitiesData, isLoading, error } = useGetActivitiesQuery({ limit: '10' })
-  const { data: insightsData } = useGetInsightsQuery({ metric: 'timePerTitle' })
+  const {
+    data: activitiesData,
+    isLoading,
+    error,
+  } = useGetActivitiesQuery({ limit: '10' })
+  const { data: insightsData } = useGetInsightsQuery({
+    metric: 'timePerTitle',
+  })
 
   const recentActivities = activitiesData?.activities || []
 
@@ -22,14 +48,14 @@ export function Dashboard() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Activity Journal</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Activity Journal
+          </h1>
           <p className="text-muted-foreground">
             Track your activities and reflect on your habits
           </p>
         </div>
-        <Button onClick={() => setIsModalOpen(true)}>
-          + Log Activity
-        </Button>
+        <Button onClick={() => setIsModalOpen(true)}>+ Log Activity</Button>
       </div>
 
       {/* Quick Stats */}
@@ -62,9 +88,7 @@ export function Dashboard() {
       <Card>
         <CardHeader>
           <CardTitle>Recent Activities</CardTitle>
-          <CardDescription>
-            Your latest logged activities
-          </CardDescription>
+          <CardDescription>Your latest logged activities</CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -86,9 +110,9 @@ export function Dashboard() {
       </Card>
 
       {/* Activity Modal */}
-      <ActivityModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+      <ActivityModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
       />
     </div>
   )

@@ -1,8 +1,10 @@
 'use client'
 
-import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { useGetSuggestionsQuery } from '@/lib/features/activities/activitiesApi'
 import { Clock } from 'lucide-react'
+
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+
+import { useGetSuggestionsQuery } from '@/lib/features/activities/activitiesApi'
 
 interface AutocompleteInputProps {
   value: string
@@ -12,12 +14,12 @@ interface AutocompleteInputProps {
   required?: boolean
 }
 
-export function AutocompleteInput({ 
-  value, 
-  onChange, 
-  placeholder, 
-  className, 
-  required 
+export function AutocompleteInput({
+  value,
+  onChange,
+  placeholder,
+  className,
+  required,
 }: AutocompleteInputProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [debouncedValue, setDebouncedValue] = useState('')
@@ -74,12 +76,15 @@ export function AutocompleteInput({
     setSelectedIndex(-1)
   }
 
-  const handleSuggestionClick = useCallback((suggestionTitle: string) => {
-    onChange(suggestionTitle)
-    setIsOpen(false)
-    setSelectedIndex(-1)
-    inputRef.current?.focus()
-  }, [onChange])
+  const handleSuggestionClick = useCallback(
+    (suggestionTitle: string) => {
+      onChange(suggestionTitle)
+      setIsOpen(false)
+      setSelectedIndex(-1)
+      inputRef.current?.focus()
+    },
+    [onChange]
+  )
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!isOpen) return
@@ -91,15 +96,11 @@ export function AutocompleteInput({
         break
       case 'ArrowDown':
         e.preventDefault()
-        setSelectedIndex(prev => 
-          prev < suggestions.length - 1 ? prev + 1 : 0
-        )
+        setSelectedIndex(prev => (prev < suggestions.length - 1 ? prev + 1 : 0))
         break
       case 'ArrowUp':
         e.preventDefault()
-        setSelectedIndex(prev => 
-          prev > 0 ? prev - 1 : suggestions.length - 1
-        )
+        setSelectedIndex(prev => (prev > 0 ? prev - 1 : suggestions.length - 1))
         break
       case 'Enter':
         e.preventDefault()
@@ -130,7 +131,7 @@ export function AutocompleteInput({
           </div>
         )}
       </div>
-      
+
       {isOpen && suggestions.length > 0 && (
         <div
           ref={dropdownRef}
@@ -142,7 +143,9 @@ export function AutocompleteInput({
               type="button"
               onClick={() => handleSuggestionClick(suggestion.title)}
               className={`w-full px-3 py-2 text-left hover:bg-gray-100 focus:bg-gray-100 focus:outline-none flex items-center justify-between ${
-                index === selectedIndex ? 'bg-blue-50 border-l-2 border-blue-500' : ''
+                index === selectedIndex
+                  ? 'bg-blue-50 border-l-2 border-blue-500'
+                  : ''
               }`}
             >
               <span className="font-medium">{suggestion.title}</span>
@@ -154,14 +157,17 @@ export function AutocompleteInput({
           ))}
         </div>
       )}
-      
-      {isOpen && debouncedValue.length >= 2 && suggestions.length === 0 && !isLoading && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
-          <div className="px-3 py-2 text-gray-500 text-sm">
-            No suggestions found
+
+      {isOpen &&
+        debouncedValue.length >= 2 &&
+        suggestions.length === 0 &&
+        !isLoading && (
+          <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
+            <div className="px-3 py-2 text-gray-500 text-sm">
+              No suggestions found
+            </div>
           </div>
-        </div>
-      )}
+        )}
     </div>
   )
 }

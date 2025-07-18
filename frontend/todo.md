@@ -1,6 +1,6 @@
-- setup cypress tests
-- autocomplete inside add activity modal
-- use shadcn modal for delete confirmation
+- setup cypress tests [in progress]
+- autocomplete inside add activity modal [ok]
+- use shadcn modal for delete confirmation [ok]
 - fix search
 - add toast notifications. Improve error messages
 - make sure mobile responsive

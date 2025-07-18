@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect } from 'react'
+
 import { useRouter } from 'next/navigation'
+
 import { useAppSelector } from '@/lib/hooks'
 
 interface AuthGuardProps {
@@ -10,7 +12,7 @@ interface AuthGuardProps {
 
 export function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter()
-  const { token, user } = useAppSelector((state) => state.auth)
+  const { token, user } = useAppSelector(state => state.auth)
 
   useEffect(() => {
     // Check if user is authenticated

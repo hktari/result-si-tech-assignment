@@ -1,7 +1,7 @@
 import { defineConfig } from 'cypress'
 
 export default defineConfig({
-  env:{
+  env: {
     API_URL: 'http://result-si-tech-assignment-production.up.railway.app',
   },
   e2e: {

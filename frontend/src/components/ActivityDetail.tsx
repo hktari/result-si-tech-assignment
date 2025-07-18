@@ -1,8 +1,15 @@
 'use client'
 
 import React from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+
 import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import type { components } from '@/lib/api-types'
 
 type ActivityResponseDto = components['schemas']['ActivityResponseDto']
@@ -14,7 +21,12 @@ interface ActivityDetailProps {
   onDelete?: () => void
 }
 
-export function ActivityDetail({ activity, onClose, onEdit, onDelete }: ActivityDetailProps) {
+export function ActivityDetail({
+  activity,
+  onClose,
+  onEdit,
+  onDelete,
+}: ActivityDetailProps) {
   const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / 60)
     const mins = minutes % 60
@@ -31,7 +43,7 @@ export function ActivityDetail({ activity, onClose, onEdit, onDelete }: Activity
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     })
   }
 
@@ -43,7 +55,8 @@ export function ActivityDetail({ activity, onClose, onEdit, onDelete }: Activity
             <div>
               <CardTitle className="text-2xl">{activity.title}</CardTitle>
               <CardDescription className="text-lg mt-2">
-                {formatDuration(activity.duration)} • {formatDate(activity.timestamp)}
+                {formatDuration(activity.duration)} •{' '}
+                {formatDate(activity.timestamp)}
               </CardDescription>
             </div>
             <Button variant="ghost" size="sm" onClick={onClose}>
@@ -60,15 +73,19 @@ export function ActivityDetail({ activity, onClose, onEdit, onDelete }: Activity
               </p>
             </div>
           )}
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <h3 className="font-semibold mb-1">Duration</h3>
-              <p className="text-muted-foreground">{formatDuration(activity.duration)}</p>
+              <p className="text-muted-foreground">
+                {formatDuration(activity.duration)}
+              </p>
             </div>
             <div>
               <h3 className="font-semibold mb-1">Date & Time</h3>
-              <p className="text-muted-foreground">{formatDate(activity.timestamp)}</p>
+              <p className="text-muted-foreground">
+                {formatDate(activity.timestamp)}
+              </p>
             </div>
           </div>
 

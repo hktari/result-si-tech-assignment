@@ -1,19 +1,23 @@
 import { configureStore } from '@reduxjs/toolkit'
-import todosReducer from './features/todos/todosSlice'
+
+import { activitiesApi } from './features/activities/activitiesApi'
 import { authApi } from './features/auth/authApi'
 import authReducer from './features/auth/authSlice'
-import { activitiesApi } from './features/activities/activitiesApi'
+import todosReducer from './features/todos/todosSlice'
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
-        todos: todosReducer,
-        auth: authReducer,
-        [authApi.reducerPath]: authApi.reducer,
-        [activitiesApi.reducerPath]: activitiesApi.reducer,
+      todos: todosReducer,
+      auth: authReducer,
+      [authApi.reducerPath]: authApi.reducer,
+      [activitiesApi.reducerPath]: activitiesApi.reducer,
     },
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(authApi.middleware, activitiesApi.middleware),
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware().concat(
+        authApi.middleware,
+        activitiesApi.middleware
+      ),
     devTools: process.env.NODE_ENV !== 'production',
   })
 }

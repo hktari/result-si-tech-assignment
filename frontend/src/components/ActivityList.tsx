@@ -1,61 +1,61 @@
-"use client";
+'use client'
 
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { useDeleteActivityMutation } from "@/lib/features/activities/activitiesApi";
-import type { components } from "@/lib/api-types";
+import { DeleteIcon, TrashIcon } from 'lucide-react'
+
+import React from 'react'
+
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { DeleteIcon, TrashIcon } from "lucide-react";
+} from '@/components/ui/dialog'
+import type { components } from '@/lib/api-types'
+import { useDeleteActivityMutation } from '@/lib/features/activities/activitiesApi'
 
-type ActivityResponseDto = components["schemas"]["ActivityResponseDto"];
+type ActivityResponseDto = components['schemas']['ActivityResponseDto']
 
 interface ActivityListProps {
-  activities: ActivityResponseDto[];
+  activities: ActivityResponseDto[]
 }
 
 export function ActivityList({ activities }: ActivityListProps) {
   const [deleteActivity, { isLoading: isDeleting }] =
-    useDeleteActivityMutation();
+    useDeleteActivityMutation()
   const handleDelete = async (activityId: string) => {
-    if (!activityId) return;
+    if (!activityId) return
 
     try {
-      await deleteActivity(activityId).unwrap();
+      await deleteActivity(activityId).unwrap()
     } catch (error) {
-      console.error("Failed to delete activity:", error);
+      console.error('Failed to delete activity:', error)
     }
-  };
+  }
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  }
 
   const formatDuration = (minutes: number) => {
     if (minutes < 60) {
-      return `${minutes}m`;
+      return `${minutes}m`
     }
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    return remainingMinutes > 0
-      ? `${hours}h ${remainingMinutes}m`
-      : `${hours}h`;
-  };
+    const hours = Math.floor(minutes / 60)
+    const remainingMinutes = minutes % 60
+    return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`
+  }
 
   return (
     <>
       <div className="space-y-4">
-        {activities.map((activity) => (
+        {activities.map(activity => (
           <div
             key={activity.id}
             className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
@@ -79,7 +79,7 @@ export function ActivityList({ activities }: ActivityListProps) {
             <div className="flex gap-2">
               <Dialog>
                 <DialogTrigger>
-                  {" "}
+                  {' '}
                   <Button variant="outline">
                     <TrashIcon />
                   </Button>
@@ -102,5 +102,5 @@ export function ActivityList({ activities }: ActivityListProps) {
         ))}
       </div>
     </>
-  );
+  )
 }
