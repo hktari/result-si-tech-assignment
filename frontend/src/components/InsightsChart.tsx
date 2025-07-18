@@ -14,6 +14,7 @@ import {
 import React from 'react'
 
 import { InsightsResponseDto } from '@/lib/features/activities/activitiesApi'
+import { CHART_COLORS, formatDurationTooltip, formatDurationYAxisTick } from '@/lib/utils/chartUtils'
 
 export function InsightsChart({ data, metric }: InsightsResponseDto) {
   const transformStackedData = (rawData: any) => {
@@ -71,31 +72,9 @@ export function InsightsChart({ data, metric }: InsightsResponseDto) {
 
   const activityNames = getActivityNames(data, metric!)
 
-  // Color palette for different activities
-  const colors = [
-    '#8884d8',
-    '#82ca9d',
-    '#ffc658',
-    '#ff7300',
-    '#00ff00',
-    '#0088fe',
-    '#ff8042',
-    '#8dd1e1',
-    '#d084d0',
-    '#ffb347',
-  ]
 
-  const formatTooltip = (value: number, name: string) => {
-    const hours = Math.floor(value / 60)
-    const minutes = value % 60
-    const timeStr = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`
-    return [timeStr, name]
-  }
 
-  const formatYAxisTick = (value: number) => {
-    const hours = Math.floor(value / 60)
-    return hours > 0 ? `${hours}h` : `${value}m`
-  }
+
 
   if (metric === 'timePerTitle') {
     return (
@@ -113,9 +92,9 @@ export function InsightsChart({ data, metric }: InsightsResponseDto) {
               height={80}
               interval={0}
             />
-            <YAxis tickFormatter={formatYAxisTick} />
-            <Tooltip formatter={formatTooltip} />
-            <Bar dataKey="durationMinutes" fill="#8884d8" />
+            <YAxis tickFormatter={formatDurationYAxisTick} />
+            <Tooltip formatter={formatDurationTooltip} />
+            <Bar dataKey="durationMinutes" fill={CHART_COLORS[0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -131,15 +110,15 @@ export function InsightsChart({ data, metric }: InsightsResponseDto) {
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="period" />
-          <YAxis tickFormatter={formatYAxisTick} />
-          <Tooltip formatter={formatTooltip} />
+          <YAxis tickFormatter={formatDurationYAxisTick} />
+          <Tooltip formatter={formatDurationTooltip} />
           <Legend />
           {activityNames.map((activity, index) => (
             <Bar
               key={activity}
               dataKey={activity}
               stackId="a"
-              fill={colors[index % colors.length]}
+              fill={CHART_COLORS[index % CHART_COLORS.length]}
             />
           ))}
         </BarChart>
