@@ -5,9 +5,11 @@ export type ActivityResponseDto = components['schemas']['ActivityResponseDto']
 export type CreateActivityDto = components['schemas']['CreateActivityDto']
 export type UpdateActivityDto = components['schemas']['UpdateActivityDto']
 export type ActivitiesListResponseDto = components['schemas']['ActivitiesListResponseDto']
+export type ActivitySuggestionResponseDto = components['schemas']['ActivitySuggestionResponseDto']
 export type InsightsParams = operations['InsightsController_getInsights']['parameters']['query']
 export type InsightsResponseDto = operations['InsightsController_getInsights']['responses']['200']['content']['application/json']
 export type GetActivitiesParams = operations['ActivitiesController_findAll']['parameters']['query']
+export type GetSuggestionsParams = operations['ActivitiesController_getSuggestions']['parameters']['query']
 
 export const activitiesApi = createApi({
   reducerPath: 'activitiesApi',
@@ -61,6 +63,13 @@ export const activitiesApi = createApi({
       }),
       providesTags: ['Insights'],
     }),
+    getSuggestions: builder.query<ActivitySuggestionResponseDto[], GetSuggestionsParams>({
+      query: (params) => ({
+        url: 'activities/suggestions',
+        params,
+      }),
+      providesTags: ['Activity'],
+    }),
   }),
 })
 
@@ -70,4 +79,5 @@ export const {
   useUpdateActivityMutation,
   useDeleteActivityMutation,
   useGetInsightsQuery,
+  useGetSuggestionsQuery,
 } = activitiesApi
