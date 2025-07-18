@@ -21,7 +21,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
-    "setup-db": "dotenv -e .env.production.local ./scripts/setup-db.sh",
+    "prod:setup-db": "dotenv -e .env.production.local ./scripts/setup-db.sh",
+    "prod:reset-db": "dotenv -e .env.production.local prisma migrate reset --force",
     "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {

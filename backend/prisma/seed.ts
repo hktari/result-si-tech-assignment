@@ -34,48 +34,110 @@ async function main() {
       name: demoUser.name,
     });
 
-    // Create some sample activities for the demo user
-    const sampleActivities = [
-      {
-        title: 'Reading',
-        description: 'Reading technical books and articles',
-        duration: 60,
-        timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-      },
-      {
-        title: 'Running',
-        description: 'Morning jog in the park',
-        duration: 30,
-        timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-      },
-      {
-        title: 'Coding',
-        description: 'Working on personal projects',
-        duration: 120,
-        timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-      },
-      {
-        title: 'Reading',
-        description: 'Reading fiction novel',
-        duration: 45,
-        timestamp: new Date(), // Today
-      },
-      {
-        title: 'Exercise',
-        description: 'Home workout session',
-        duration: 40,
-        timestamp: new Date(), // Today
-      },
-    ];
+    // Create comprehensive sample activities for the demo user
+    // Limited to 4 activity categories: Reading, Coding, Exercise, Learning
+    const now = new Date();
+    const sampleActivities = [];
 
-    for (const activity of sampleActivities) {
-      await prisma.activity.create({
-        data: {
-          ...activity,
-          userId: demoUser.id,
-        },
-      });
+    // Helper function to create random duration between min and max
+    const randomDuration = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    // Helper function to get random time within a day
+    const randomTimeInDay = (date: Date) => {
+      const newDate = new Date(date);
+      newDate.setHours(Math.floor(Math.random() * 16) + 6); // Between 6 AM and 10 PM
+      newDate.setMinutes(Math.floor(Math.random() * 60));
+      return newDate;
+    };
+
+    // Generate activities for the past 3 months
+    for (let i = 0; i < 90; i++) {
+      const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      const activitiesPerDay = Math.floor(Math.random() * 4) + 1; // 1-4 activities per day
+
+      for (let j = 0; j < activitiesPerDay; j++) {
+        const activityType = Math.floor(Math.random() * 4);
+        let activity;
+
+        switch (activityType) {
+          case 0: // Reading
+            activity = {
+              title: 'Reading',
+              description: [
+                'Reading technical documentation',
+                'Reading fiction novel',
+                'Reading news articles',
+                'Reading research papers',
+                'Reading programming books',
+                'Reading business articles'
+              ][Math.floor(Math.random() * 6)],
+              duration: randomDuration(15, 120),
+              timestamp: randomTimeInDay(date),
+            };
+            break;
+          case 1: // Coding
+            activity = {
+              title: 'Coding',
+              description: [
+                'Working on personal projects',
+                'Contributing to open source',
+                'Code review and refactoring',
+                'Learning new frameworks',
+                'Building side projects',
+                'Debugging and testing'
+              ][Math.floor(Math.random() * 6)],
+              duration: randomDuration(30, 180),
+              timestamp: randomTimeInDay(date),
+            };
+            break;
+          case 2: // Exercise
+            activity = {
+              title: 'Exercise',
+              description: [
+                'Morning jog in the park',
+                'Home workout session',
+                'Gym strength training',
+                'Yoga and stretching',
+                'Cycling outdoors',
+                'Swimming session'
+              ][Math.floor(Math.random() * 6)],
+              duration: randomDuration(20, 90),
+              timestamp: randomTimeInDay(date),
+            };
+            break;
+          case 3: // Learning
+            activity = {
+              title: 'Learning',
+              description: [
+                'Online course completion',
+                'Watching tutorial videos',
+                'Attending webinars',
+                'Language learning practice',
+                'Skill development workshops',
+                'Professional development'
+              ][Math.floor(Math.random() * 6)],
+              duration: randomDuration(25, 150),
+              timestamp: randomTimeInDay(date),
+            };
+            break;
+        }
+
+        if (activity) {
+          sampleActivities.push(activity);
+        }
+      }
     }
+
+    // Sort activities by timestamp (oldest first)
+    sampleActivities.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+
+    // Batch insert all activities for better performance
+    await prisma.activity.createMany({
+      data: sampleActivities.map(activity => ({
+        ...activity,
+        userId: demoUser.id,
+      })),
+    });
 
     console.log('✅ Sample activities created for demo user');
   } else {
