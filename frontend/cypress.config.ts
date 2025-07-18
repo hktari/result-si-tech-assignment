@@ -15,6 +15,8 @@ export default defineConfig({
     defaultCommandTimeout: 10000,
     requestTimeout: 10000,
     responseTimeout: 10000,
+    // Add CORS configuration
+    chromeWebSecurity: false,
   },
   component: {
     devServer: {
