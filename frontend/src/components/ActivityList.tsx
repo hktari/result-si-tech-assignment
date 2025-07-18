@@ -1,5 +1,6 @@
 'use client'
 
+import { DialogTitle } from '@radix-ui/react-dialog'
 import { DeleteIcon, TrashIcon } from 'lucide-react'
 
 import React from 'react'
@@ -78,23 +79,20 @@ export function ActivityList({ activities }: ActivityListProps) {
             </div>
             <div className="flex gap-2">
               <Dialog>
-                <DialogTrigger>
-                  {' '}
-                  <Button variant="outline">
-                    <TrashIcon />
-                  </Button>
+                <DialogTrigger className="p-2 cursor-pointer rounded-md border outline-none focus-visible:ring-ring/50 focus-visible:ring-[3px] focus-visible:border-transparent focus-visible:outline-none hover:bg-gray-100">
+                  <TrashIcon size={20} />
                 </DialogTrigger>
                 <DialogContent>
-                  <>
-                    <p>Are you sure you want to delete this activity?</p>
-                    <Button
-                      disabled={isDeleting}
-                      onClick={() => handleDelete(activity.id)}
-                      variant="destructive"
-                    >
-                      Yes
-                    </Button>
-                  </>
+                  <DialogTitle>
+                    Are you sure you want to delete this activity?
+                  </DialogTitle>
+                  <Button
+                    disabled={isDeleting}
+                    onClick={() => handleDelete(activity.id)}
+                    variant="destructive"
+                  >
+                    Yes
+                  </Button>
                 </DialogContent>
               </Dialog>
             </div>
