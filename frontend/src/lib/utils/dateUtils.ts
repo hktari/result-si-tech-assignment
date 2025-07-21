@@ -1,3 +1,12 @@
+export function getMondayOfThisWeek(): Date {
+  const today = new Date()
+  const dayOfWeek = today.getDay() // 0 (Sunday) to 6 (Saturday)
+  const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1) // Adjust for Sunday
+  const monday = new Date(today.setDate(diff))
+  monday.setHours(0, 0, 0, 0)
+  return monday
+}
+
 /**
  * Converts a dateRange string to start and end date strings
  */

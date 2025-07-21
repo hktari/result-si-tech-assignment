@@ -4,10 +4,10 @@ import React from 'react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useGetActivitiesQuery } from '@/lib/features/activities/activitiesApi'
+import { getMondayOfThisWeek } from '@/lib/utils/dateUtils'
 
 export function QuickStats() {
   const { data: activitiesData } = useGetActivitiesQuery({ limit: '1000' })
-  // const { data: weeklyInsights } = useGetInsightsQuery({ metric: 'weekly' })
 
   const activities = activitiesData?.activities || []
   const totalActivities = activities.length
@@ -16,17 +16,15 @@ export function QuickStats() {
     0
   )
   const totalHours = Math.round((totalMinutes / 60) * 10) / 10
-
   // Calculate activities this week
-  const oneWeekAgo = new Date()
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+  const monday = getMondayOfThisWeek()
   const thisWeekActivities = activities.filter(
-    activity => new Date(activity.timestamp) >= oneWeekAgo
+    activity => new Date(activity.timestamp) >= monday
   ).length
 
   // Calculate average daily time this week
   const thisWeekMinutes = activities
-    .filter(activity => new Date(activity.timestamp) >= oneWeekAgo)
+    .filter(activity => new Date(activity.timestamp) >= monday)
     .reduce((sum, activity) => sum + activity.duration, 0)
   const avgDailyMinutes = Math.round(thisWeekMinutes / 7)
 

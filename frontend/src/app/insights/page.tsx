@@ -16,7 +16,7 @@ import { dateRangeToStartEnd } from '@/lib/utils/dateUtils'
 
 export default function InsightsPage() {
   const [filters, setFilters] = useState({
-    dateRange: 'last7days',
+    dateRange: 'last30days',
     interval: 'daily' as 'daily' | 'weekly' | 'monthly',
     metric: 'timePerTitle' as 'timePerTitle' | 'timePerTitleStacked',
   })
