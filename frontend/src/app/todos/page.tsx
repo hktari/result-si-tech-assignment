@@ -6,8 +6,8 @@ import {
   addTodo,
   deleteTodo,
   toggleCompleted,
-} from '../../lib/features/todos/todosSlice'
-import { useAppDispatch, useAppSelector } from '../../lib/hooks'
+} from '../../lib/redux/features/todos/todosSlice'
+import { useAppDispatch, useAppSelector } from '../../lib/redux/hooks'
 
 export default function TodosPage() {
   const dispatch = useAppDispatch()

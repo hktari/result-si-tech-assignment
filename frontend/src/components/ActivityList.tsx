@@ -2,7 +2,6 @@
 
 import { DialogTitle } from '@radix-ui/react-dialog'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import { TrashIcon } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -19,7 +18,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import type { components } from '@/lib/api-types'
-import { useDeleteActivityMutation } from '@/lib/features/activities/activitiesApi'
+import { useDeleteActivityMutation } from '@/lib/redux/features/activities/activitiesApi'
 import { getErrorMessage } from '@/lib/utils'
 
 type ActivityResponseDto = components['schemas']['ActivityResponseDto']

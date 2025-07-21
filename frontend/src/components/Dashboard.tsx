@@ -14,7 +14,7 @@ import {
   ActivityResponseDto,
   useGetActivitiesQuery,
   useGetInsightsQuery,
-} from '@/lib/features/activities/activitiesApi'
+} from '@/lib/redux/features/activities/activitiesApi'
 import { dateRangeToStartEnd } from '@/lib/utils/dateUtils'
 
 import { ActivityList } from './ActivityList'

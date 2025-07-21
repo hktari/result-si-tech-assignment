@@ -3,7 +3,7 @@
 import React from 'react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { useGetActivitiesQuery } from '@/lib/features/activities/activitiesApi'
+import { useGetActivitiesQuery } from '@/lib/redux/features/activities/activitiesApi'
 import { getMondayOfThisWeek } from '@/lib/utils/dateUtils'
 
 export function QuickStats() {

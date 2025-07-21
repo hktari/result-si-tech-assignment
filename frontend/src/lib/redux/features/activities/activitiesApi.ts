@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import type { components, operations } from '../../api-types'
+import type { components, operations } from '../../../api-types'
 
 export type ActivityResponseDto = components['schemas']['ActivityResponseDto']
 export type CreateActivityDto = components['schemas']['CreateActivityDto']

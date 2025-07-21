@@ -14,7 +14,7 @@ import {
 
 import React from 'react'
 
-import { InsightsResponseDto } from '@/lib/features/activities/activitiesApi'
+import { InsightsResponseDto } from '@/lib/redux/features/activities/activitiesApi'
 import {
   CHART_COLORS,
   formatDurationTooltip,

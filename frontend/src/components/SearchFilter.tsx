@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { components } from '@/lib/api-types'
-import { useFilterActivitiesQuery } from '@/lib/features/activities/activitiesApi'
+import { useFilterActivitiesQuery } from '@/lib/redux/features/activities/activitiesApi'
 
 type ActivityResponseDto = components['schemas']['ActivityResponseDto']
 

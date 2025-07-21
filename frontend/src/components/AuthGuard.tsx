@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { useAppSelector } from '@/lib/hooks'
+import { useAppSelector } from '@/lib/redux/hooks'
 
 interface AuthGuardProps {
   children: React.ReactNode

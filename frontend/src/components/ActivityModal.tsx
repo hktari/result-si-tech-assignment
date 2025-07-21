@@ -1,7 +1,6 @@
 'use client'
 
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import { toast } from 'sonner'
 
 import React, { useEffect, useState } from 'react'
@@ -15,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useCreateActivityMutation } from '@/lib/features/activities/activitiesApi'
+import { useCreateActivityMutation } from '@/lib/redux/features/activities/activitiesApi'
 import { getErrorMessage } from '@/lib/utils'
 
 import { AutocompleteInput } from './AutocompleteInput'

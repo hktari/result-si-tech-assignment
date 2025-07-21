@@ -1,9 +1,7 @@
 // ***********************************************
 // Cypress custom commands with API interceptors
 // ***********************************************
-import path from 'path'
-
-import type { components } from '../../src/lib/api-types'
+import type { components } from '@/lib/api-types'
 
 // Type aliases for better readability
 type LoginResponseDto = components['schemas']['LoginResponseDto']

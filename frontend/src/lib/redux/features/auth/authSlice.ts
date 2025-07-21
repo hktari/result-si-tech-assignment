@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-import type { components } from '../../api-types'
+import type { components } from '../../../api-types'
 
 type UserResponseDto = components['schemas']['UserResponseDto']
 

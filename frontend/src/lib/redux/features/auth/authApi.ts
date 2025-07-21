@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import type { components } from '../../api-types'
+import type { components } from '../../../api-types'
 import type { RootState } from '../../store'
 
 // Type aliases for better readability

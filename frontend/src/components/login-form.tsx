@@ -1,7 +1,6 @@
 'use client'
 
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 
 import { useState } from 'react'
 
@@ -18,9 +17,9 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useLoginMutation } from '@/lib/features/auth/authApi'
-import { setCredentials } from '@/lib/features/auth/authSlice'
-import { useAppDispatch } from '@/lib/hooks'
+import { useLoginMutation } from '@/lib/redux/features/auth/authApi'
+import { setCredentials } from '@/lib/redux/features/auth/authSlice'
+import { useAppDispatch } from '@/lib/redux/hooks'
 import { cn, getErrorMessage } from '@/lib/utils'
 
 export function LoginForm({

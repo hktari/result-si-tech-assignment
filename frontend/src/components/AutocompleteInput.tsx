@@ -4,7 +4,7 @@ import { Clock } from 'lucide-react'
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
-import { useGetSuggestionsQuery } from '@/lib/features/activities/activitiesApi'
+import { useGetSuggestionsQuery } from '@/lib/redux/features/activities/activitiesApi'
 
 interface AutocompleteInputProps {
   value: string

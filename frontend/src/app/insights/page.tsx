@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useGetInsightsQuery } from '@/lib/features/activities/activitiesApi'
+import { useGetInsightsQuery } from '@/lib/redux/features/activities/activitiesApi'
 import { dateRangeToStartEnd } from '@/lib/utils/dateUtils'
 
 export default function InsightsPage() {
