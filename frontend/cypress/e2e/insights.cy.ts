@@ -29,7 +29,7 @@ describe('Insights Functionality', () => {
     cy.get('[data-testid="insights-chart"]').should('be.visible')
   })
 
-  it.only('should change metric type', () => {
+  it('should change metric type', () => {
     cy.get('a').contains('Insights').click()
     cy.wait('@getInsights')
 
