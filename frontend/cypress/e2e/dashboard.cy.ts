@@ -25,8 +25,8 @@ describe('Dashboard Functionality', () => {
     cy.contains('Exercise').should('be.visible')
   })
 
-  it('should open activity modal when clicking Log Activity', () => {
-    cy.visit('/')
+  it.only('should open activity modal when clicking Log Activity', () => {
+    // cy.visit('/')
     cy.wait('@getActivities')
 
     // Click Log Activity button

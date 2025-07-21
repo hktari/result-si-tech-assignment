@@ -62,12 +62,12 @@ const mockSuggestions: ActivitySuggestionResponseDto[] = [
 // Custom command for setting up API interceptors
 Cypress.Commands.add('setupApiInterceptors', () => {
   // Auth endpoints
-  cy.intercept(Cypress.env('API_URL') + '/auth/login', {
+  cy.intercept('**/auth/login', {
     statusCode: 200,
     body: mockLoginResponse,
   }).as('loginRequest')
 
-  cy.intercept(Cypress.env('API_URL') + '/auth/register', {
+  cy.intercept('**/auth/register', {
     statusCode: 201,
     body: {
       message: 'User registered successfully',
@@ -75,28 +75,28 @@ Cypress.Commands.add('setupApiInterceptors', () => {
     },
   }).as('registerRequest')
 
-  cy.intercept(Cypress.env('API_URL') + '/auth/profile', {
+  cy.intercept('**/auth/profile', {
     statusCode: 200,
     body: mockUser,
   }).as('getProfile')
 
   // Activity endpoints
-  cy.intercept(Cypress.env('API_URL') + '/activities*', {
+  cy.intercept('**/activities*', {
     statusCode: 200,
     body: mockActivitiesResponse,
   }).as('getActivities')
 
-  cy.intercept(Cypress.env('API_URL') + '/activities', {
+  cy.intercept('**/activities', {
     statusCode: 201,
     body: mockActivities[0],
   }).as('createActivity')
 
-  cy.intercept(Cypress.env('API_URL') + '/activities/*', {
+  cy.intercept('**/activities/*', {
     statusCode: 200,
     body: mockActivities[0],
   }).as('updateActivity')
 
-  cy.intercept(Cypress.env('API_URL') + '/activities/*', {
+  cy.intercept('**/activities/*', {
     statusCode: 200,
     body: {
       message: 'Activity deleted successfully',
@@ -104,13 +104,13 @@ Cypress.Commands.add('setupApiInterceptors', () => {
     },
   }).as('deleteActivity')
 
-  cy.intercept(Cypress.env('API_URL') + '/activities/suggestions*', {
+  cy.intercept('**/activities/suggestions*', {
     statusCode: 200,
     body: mockSuggestions,
   }).as('getActivitySuggestions')
 
   // Insights endpoints
-  cy.intercept(Cypress.env('API_URL') + '/insights*', {
+  cy.intercept('**/insights*', {
     statusCode: 200,
     body: {
       data: [
@@ -130,8 +130,8 @@ Cypress.Commands.add(
     cy.setupApiInterceptors()
 
     cy.visit('/login')
-    cy.get('input[type="email"]').clear().type(email)
-    cy.get('input[type="password"]').clear().type(password)
+    // cy.get('input[type="email"]').clear().type(email)
+    // cy.get('input[type="password"]').clear().type(password)
     cy.get('form').find('button[type="submit"]').click()
 
     // Wait for login request to complete

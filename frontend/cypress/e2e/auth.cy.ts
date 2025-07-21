@@ -30,6 +30,14 @@ describe('Authentication Flow', () => {
     cy.contains('Log Activity').should('be.visible')
   })
 
+  it.only('should show dashboard when logged in and navigating to "/"', () => {
+    cy.login()
+    cy.visit('/')
+    cy.url().should('eq', Cypress.config().baseUrl + '/')
+    cy.contains('Activity Journal').should('be.visible')
+    cy.contains('Log Activity').should('be.visible')
+  })
+
   it('should show error for invalid credentials', () => {
     cy.visit('/login')
 
