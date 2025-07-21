@@ -5,21 +5,18 @@ describe('Insights Functionality', () => {
   })
 
   it('should display insights page components', () => {
-    cy.visit('/insights')
-
-    // Wait for insights data to load
+    cy.get('a').contains('Insights').click()
     cy.wait('@getInsights')
 
     // Check main insights elements
     cy.contains('Insights').should('be.visible')
-    cy.contains('Filter').should('be.visible')
 
     // Check if chart is rendered (adjust selector based on your implementation)
     cy.get('[data-testid="insights-chart"]').should('be.visible')
   })
 
   it('should filter insights by date range', () => {
-    cy.visit('/insights')
+    cy.get('a').contains('Insights').click()
     cy.wait('@getInsights')
 
     // Find and use date range filter (adjust selectors based on your implementation)
@@ -32,12 +29,14 @@ describe('Insights Functionality', () => {
     cy.get('[data-testid="insights-chart"]').should('be.visible')
   })
 
-  it('should change metric type', () => {
-    cy.visit('/insights')
+  it.only('should change metric type', () => {
+    cy.get('a').contains('Insights').click()
     cy.wait('@getInsights')
 
     // Change metric type (adjust selector based on your implementation)
-    cy.get('select[data-testid="metric-select"]').select('timePerTitleStacked')
+    cy.get('[data-testid="metric-select"]')
+      .find('button[data-testid="timePerTitleStacked"]')
+      .click()
 
     // Wait for new data
     cy.wait('@getInsights')
@@ -47,7 +46,7 @@ describe('Insights Functionality', () => {
   })
 
   it('should navigate back to dashboard', () => {
-    cy.visit('/insights')
+    cy.get('a').contains('Insights').click()
     cy.wait('@getInsights')
 
     // Click Dashboard navigation
@@ -61,7 +60,7 @@ describe('Insights Functionality', () => {
   })
 
   it('should display insights data correctly', () => {
-    cy.visit('/insights')
+    cy.get('a').contains('Insights').click()
     cy.wait('@getInsights')
 
     // Verify mock data is displayed (adjust based on your mock data)

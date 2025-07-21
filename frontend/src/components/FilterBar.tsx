@@ -76,6 +76,7 @@ export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
               <div className="flex gap-1">
                 {intervalOptions.map(option => (
                   <Button
+                    data-testid={option.value}
                     key={option.value}
                     variant={
                       filters.interval === option.value ? 'default' : 'outline'
@@ -91,11 +92,12 @@ export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
           )}
 
           {/* Metric Selector */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2" data-testid="metric-select">
             <label className="text-sm font-medium">View:</label>
             <div className="flex gap-1">
               {metricOptions.map(option => (
                 <Button
+                  data-testid={option.value}
                   key={option.value}
                   variant={
                     filters.metric === option.value ? 'default' : 'outline'

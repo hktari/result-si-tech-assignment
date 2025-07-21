@@ -78,24 +78,24 @@ export function InsightsChart({ data, metric }: InsightsResponseDto) {
 
   const activityNames = getActivityNames(data, metric!)
 
-  if (metric === 'timePerTitle') {
-    return (
-      <div className="h-96">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={chartData}
-            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="name"
-              angle={-45}
-              textAnchor="end"
-              height={80}
-              interval={0}
-            />
-            <YAxis tickFormatter={formatDurationYAxisTick} />
-            <Tooltip formatter={formatDurationTooltip} />
+  return (
+    <div className="h-96" data-testid="insights-chart">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={chartData}
+          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey={metric === 'timePerTitle' ? 'name' : 'period'}
+            angle={-45}
+            textAnchor="end"
+            height={80}
+            interval={0}
+          />
+          <YAxis tickFormatter={formatDurationYAxisTick} />
+          <Tooltip formatter={formatDurationTooltip} />
+          {metric === 'timePerTitle' ? (
             <Bar dataKey="durationMinutes">
               {data?.map((entry, index) => (
                 <Cell
@@ -104,32 +104,19 @@ export function InsightsChart({ data, metric }: InsightsResponseDto) {
                 />
               ))}
             </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    )
-  }
-
-  return (
-    <div className="h-96">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={chartData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="period" />
-          <YAxis tickFormatter={formatDurationYAxisTick} />
-          <Tooltip formatter={formatDurationTooltip} />
-          <Legend />
-          {activityNames.map((activity, index) => (
-            <Bar
-              key={activity}
-              dataKey={activity}
-              stackId="a"
-              fill={CHART_COLORS[index % CHART_COLORS.length]}
-            />
-          ))}
+          ) : (
+            <>
+              <Legend />
+              {activityNames.map((activity, index) => (
+                <Bar
+                  key={activity}
+                  dataKey={activity}
+                  stackId="a"
+                  fill={CHART_COLORS[index % CHART_COLORS.length]}
+                />
+              ))}
+            </>
+          )}
         </BarChart>
       </ResponsiveContainer>
     </div>

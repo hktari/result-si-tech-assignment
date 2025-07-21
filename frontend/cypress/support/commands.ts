@@ -1,6 +1,8 @@
 // ***********************************************
 // Cypress custom commands with API interceptors
 // ***********************************************
+import path from 'path'
+
 import type { components } from '../../src/lib/api-types'
 
 // Type aliases for better readability
@@ -124,15 +126,19 @@ Cypress.Commands.add('setupApiInterceptors', () => {
   }).as('getActivitySuggestions')
 
   // Insights endpoints
-  cy.intercept('**/insights*', {
+  cy.intercept(new URL('/insights*', Cypress.env('API_URL')).href, {
     statusCode: 200,
     body: {
+      metric: 'timePerTitle',
+      date_range: {
+        from: '2025-07-01',
+        to: '2025-07-16',
+      },
       data: [
-        { name: 'Reading', value: 180 },
-        { name: 'Exercise', value: 90 },
-        { name: 'Coding', value: 240 },
+        { name: 'Reading', durationMinutes: 180 },
+        { name: 'Exercise', durationMinutes: 90 },
+        { name: 'Coding', durationMinutes: 240 },
       ],
-      total: 510,
     },
   }).as('getInsights')
 })
