@@ -1,2 +1,2 @@
-- add toast notifications. Improve error messages
 - persist redux state
+- fix flaky auth test: invalid credentials
