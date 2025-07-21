@@ -15,7 +15,7 @@ type UserResponseDto = components['schemas']['UserResponseDto']
 // Mock data for testing
 const mockUser: UserResponseDto = {
   id: 'test-user-id',
-  email: 'demo@example.com',
+  email: Cypress.env('DEMO_USER_EMAIL'),
   name: 'Demo User',
   createdAt: '2025-01-01T00:00:00Z',
   updatedAt: '2025-01-01T00:00:00Z',
@@ -62,9 +62,23 @@ const mockSuggestions: ActivitySuggestionResponseDto[] = [
 // Custom command for setting up API interceptors
 Cypress.Commands.add('setupApiInterceptors', () => {
   // Auth endpoints
-  cy.intercept('**/auth/login', {
-    statusCode: 200,
-    body: mockLoginResponse,
+  cy.intercept('**/auth/login', req => {
+    if (
+      req.body.email === Cypress.env('DEMO_USER_EMAIL') &&
+      req.body.password === Cypress.env('DEMO_USER_PASSWORD')
+    ) {
+      req.reply({
+        statusCode: 200,
+        body: mockLoginResponse,
+      })
+    } else {
+      req.reply({
+        statusCode: 401,
+        body: {
+          message: 'Invalid credentials',
+        },
+      })
+    }
   }).as('loginRequest')
 
   cy.intercept('**/auth/register', {
@@ -126,12 +140,15 @@ Cypress.Commands.add('setupApiInterceptors', () => {
 // Custom command for login with interceptors
 Cypress.Commands.add(
   'login',
-  (email = 'demo@example.com', password = 'demo123') => {
+  (
+    email = Cypress.env('DEMO_USER_EMAIL'),
+    password = Cypress.env('DEMO_USER_PASSWORD')
+  ) => {
     cy.setupApiInterceptors()
 
     cy.visit('/login')
-    // cy.get('input[type="email"]').clear().type(email)
-    // cy.get('input[type="password"]').clear().type(password)
+    cy.get('input[type="email"]').clear().type(email)
+    cy.get('input[type="password"]').clear().type(password)
     cy.get('form').find('button[type="submit"]').click()
 
     // Wait for login request to complete

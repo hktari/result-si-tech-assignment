@@ -1,9 +1,13 @@
 'use client'
 
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
+
 import { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -17,7 +21,7 @@ import { Label } from '@/components/ui/label'
 import { useLoginMutation } from '@/lib/features/auth/authApi'
 import { setCredentials } from '@/lib/features/auth/authSlice'
 import { useAppDispatch } from '@/lib/hooks'
-import { cn } from '@/lib/utils'
+import { cn, getErrorMessage } from '@/lib/utils'
 
 export function LoginForm({
   className,
@@ -29,7 +33,7 @@ export function LoginForm({
   const [password, setPassword] = useState(
     process.env.NEXT_PUBLIC_DEMO_USER_PASSWORD || ''
   )
-  const [login, { isLoading, error }] = useLoginMutation()
+  const [login, { isLoading, error, isError }] = useLoginMutation()
   const dispatch = useAppDispatch()
   const router = useRouter()
 
@@ -46,9 +50,9 @@ export function LoginForm({
       )
       // Redirect to dashboard or home page
       router.push('/')
-    } catch (error) {
-      // Error is already handled by RTK Query and available in the error state
-      console.error('Login failed:', error)
+    } catch (err) {
+      // Error is handled by RTK Query and displayed in the UI
+      console.error('Login failed:', err)
     }
   }
 
@@ -87,9 +91,17 @@ export function LoginForm({
                   onChange={e => setPassword(e.target.value)}
                 />
               </div>
+              {isError && (
+                <Alert variant="destructive">
+                  <ExclamationTriangleIcon className="h-4 w-4" />
+                  <AlertDescription>
+                    {getErrorMessage(error) || 'Invalid email or password'}
+                  </AlertDescription>
+                </Alert>
+              )}
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full">
-                  Login
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? 'Logging in...' : 'Login'}
                 </Button>
               </div>
             </div>
