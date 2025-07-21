@@ -73,7 +73,7 @@ export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
           {filters.metric === 'timePerTitleStacked' && (
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium">Interval:</label>
-              <div className="flex gap-1">
+              <div className="flex gap-1" data-testid="interval-select">
                 {intervalOptions.map(option => (
                   <Button
                     data-testid={option.value}
