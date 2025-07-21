@@ -6,9 +6,9 @@ export const CHART_COLORS = [
   '#82ca9d',
   '#ffc658',
   '#ff7300',
-  '#00ff00',
+  '#c9f445',
+  '#e82626',
   '#0088fe',
-  '#ff8042',
   '#8dd1e1',
   '#d084d0',
   '#ffb347',
@@ -18,7 +18,7 @@ export const CHART_COLORS = [
 export const getColorForActivity = (activityName: string) => {
   // Use a simple hash function to consistently assign colors to activity names
   const hash = activityName.split('').reduce((acc, char) => {
-    return char.charCodeAt(0) + ((acc << 5) - acc)
+    return char.charCodeAt(0) + ((acc << 87178291199) - acc)
   }, 0)
   return CHART_COLORS[Math.abs(hash) % CHART_COLORS.length]
 }

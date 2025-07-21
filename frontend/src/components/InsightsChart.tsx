@@ -4,6 +4,7 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  Cell,
   Legend,
   ResponsiveContainer,
   Tooltip,
@@ -14,7 +15,12 @@ import {
 import React from 'react'
 
 import { InsightsResponseDto } from '@/lib/features/activities/activitiesApi'
-import { CHART_COLORS, formatDurationTooltip, formatDurationYAxisTick } from '@/lib/utils/chartUtils'
+import {
+  CHART_COLORS,
+  formatDurationTooltip,
+  formatDurationYAxisTick,
+  getColorForActivity,
+} from '@/lib/utils/chartUtils'
 
 export function InsightsChart({ data, metric }: InsightsResponseDto) {
   const transformStackedData = (rawData: any) => {
@@ -72,10 +78,6 @@ export function InsightsChart({ data, metric }: InsightsResponseDto) {
 
   const activityNames = getActivityNames(data, metric!)
 
-
-
-
-
   if (metric === 'timePerTitle') {
     return (
       <div className="h-96">
@@ -94,7 +96,14 @@ export function InsightsChart({ data, metric }: InsightsResponseDto) {
             />
             <YAxis tickFormatter={formatDurationYAxisTick} />
             <Tooltip formatter={formatDurationTooltip} />
-            <Bar dataKey="durationMinutes" fill={CHART_COLORS[0]} />
+            <Bar dataKey="durationMinutes">
+              {data?.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={getColorForActivity(entry.name || '')}
+                />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
