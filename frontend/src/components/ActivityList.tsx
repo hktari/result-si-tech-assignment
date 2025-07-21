@@ -1,19 +1,26 @@
 'use client'
 
 import { DialogTitle } from '@radix-ui/react-dialog'
-import { DeleteIcon, TrashIcon } from 'lucide-react'
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
+import { TrashIcon } from 'lucide-react'
+import { toast } from 'sonner'
 
-import React from 'react'
+import React, { useState } from 'react'
 
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
-  DialogClose,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
   DialogTrigger,
 } from '@/components/ui/dialog'
 import type { components } from '@/lib/api-types'
 import { useDeleteActivityMutation } from '@/lib/features/activities/activitiesApi'
+import { getErrorMessage } from '@/lib/utils'
 
 type ActivityResponseDto = components['schemas']['ActivityResponseDto']
 
@@ -22,15 +29,23 @@ interface ActivityListProps {
 }
 
 export function ActivityList({ activities }: ActivityListProps) {
-  const [deleteActivity, { isLoading: isDeleting }] =
+  const [deleteActivity, { isLoading: isDeleting, error }] =
     useDeleteActivityMutation()
-  const handleDelete = async (activityId: string) => {
-    if (!activityId) return
+  const [activityToDelete, setActivityToDelete] =
+    useState<ActivityResponseDto | null>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  const handleDelete = async (activity: ActivityResponseDto) => {
+    if (!activity?.id) return
 
     try {
-      await deleteActivity(activityId).unwrap()
-    } catch (error) {
-      console.error('Failed to delete activity:', error)
+      await deleteActivity(activity.id).unwrap()
+      toast.success('Activity deleted', {
+        description: `${activity.title} has been removed from your activities`,
+      })
+      setDialogOpen(false)
+    } catch (err) {
+      console.error('Failed to delete activity:', err)
     }
   }
 
@@ -78,21 +93,57 @@ export function ActivityList({ activities }: ActivityListProps) {
               </p>
             </div>
             <div className="flex gap-2">
-              <Dialog>
-                <DialogTrigger className="p-2 cursor-pointer rounded-md border outline-none focus-visible:ring-ring/50 focus-visible:ring-[3px] focus-visible:border-transparent focus-visible:outline-none hover:bg-gray-100">
+              <Dialog
+                open={dialogOpen && activityToDelete?.id === activity.id}
+                onOpenChange={open => {
+                  setDialogOpen(open)
+                  if (open) {
+                    setActivityToDelete(activity)
+                  } else {
+                    setActivityToDelete(null)
+                  }
+                }}
+              >
+                <DialogTrigger
+                  data-testid={`delete-activity-${activity.id}`}
+                  className="p-2 cursor-pointer rounded-md border outline-none focus-visible:ring-ring/50 focus-visible:ring-[3px] focus-visible:border-transparent focus-visible:outline-none hover:bg-gray-100"
+                >
                   <TrashIcon size={20} />
                 </DialogTrigger>
                 <DialogContent>
-                  <DialogTitle>
-                    Are you sure you want to delete this activity?
-                  </DialogTitle>
-                  <Button
-                    disabled={isDeleting}
-                    onClick={() => handleDelete(activity.id)}
-                    variant="destructive"
-                  >
-                    Yes
-                  </Button>
+                  <DialogHeader>
+                    <DialogTitle>Delete Activity</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to delete &quot;{activity.title}
+                      &quot;? This action cannot be undone.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  {error && (
+                    <Alert variant="destructive" className="mt-2">
+                      <ExclamationTriangleIcon className="h-4 w-4" />
+                      <AlertDescription>
+                        {getErrorMessage(error) || 'Failed to delete activity'}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  <DialogFooter className="mt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => setDialogOpen(false)}
+                      disabled={isDeleting}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      disabled={isDeleting}
+                      onClick={() => handleDelete(activity)}
+                      variant="destructive"
+                    >
+                      {isDeleting ? 'Deleting...' : 'Delete'}
+                    </Button>
+                  </DialogFooter>
                 </DialogContent>
               </Dialog>
             </div>

@@ -3,6 +3,8 @@ import { defineConfig } from 'cypress'
 export default defineConfig({
   env: {
     API_URL: 'http://result-si-tech-assignment-production.up.railway.app',
+    DEMO_USER_EMAIL: 'demo@example.com',
+    DEMO_USER_PASSWORD: 'demo123',
   },
   e2e: {
     baseUrl: 'http://localhost:3000',

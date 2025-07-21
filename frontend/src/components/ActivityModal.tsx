@@ -1,7 +1,12 @@
 'use client'
 
-import React, { useState } from 'react'
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
+import { toast } from 'sonner'
 
+import React, { useEffect, useState } from 'react'
+
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -11,6 +16,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useCreateActivityMutation } from '@/lib/features/activities/activitiesApi'
+import { getErrorMessage } from '@/lib/utils'
 
 import { AutocompleteInput } from './AutocompleteInput'
 
@@ -27,13 +33,22 @@ export function ActivityModal({ isOpen, onClose }: ActivityModalProps) {
     const now = new Date()
     return now.toISOString().slice(0, 16) // Format for datetime-local input
   })
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const [createActivity, { isLoading }] = useCreateActivityMutation()
+  const [createActivity, { isLoading, error }] = useCreateActivityMutation()
+
+  useEffect(() => {
+    if (error) {
+      setErrorMessage(getErrorMessage(error) || 'Failed to create activity')
+    }
+  }, [error])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setErrorMessage(null)
 
     if (!title.trim() || !duration) {
+      setErrorMessage('Title and duration are required')
       return
     }
 
@@ -45,6 +60,11 @@ export function ActivityModal({ isOpen, onClose }: ActivityModalProps) {
         timestamp: new Date(timestamp).toISOString(),
       }).unwrap()
 
+      // Show success toast
+      toast.success('Activity created successfully', {
+        description: `${title} has been added to your activities`,
+      })
+
       // Reset form
       setTitle('')
       setDescription('')
@@ -55,8 +75,8 @@ export function ActivityModal({ isOpen, onClose }: ActivityModalProps) {
       })
 
       onClose()
-    } catch (error) {
-      console.error('Failed to create activity:', error)
+    } catch (err) {
+      console.error('Failed to create activity:', err)
     }
   }
 
@@ -81,6 +101,12 @@ export function ActivityModal({ isOpen, onClose }: ActivityModalProps) {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {errorMessage && (
+                <Alert variant="destructive" className="mb-4">
+                  <ExclamationTriangleIcon className="h-4 w-4" />
+                  <AlertDescription>{errorMessage}</AlertDescription>
+                </Alert>
+              )}
               <div>
                 <label
                   htmlFor="title"
