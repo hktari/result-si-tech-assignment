@@ -1,8 +1,2 @@
-- setup cypress tests [in progress]
-- autocomplete inside add activity modal [ok]
-- use shadcn modal for delete confirmation [ok]
-- fix search
 - add toast notifications. Improve error messages
-- make sure mobile responsive
-- autoredirect to login page if not logged in [ok]
-- integrate shadcn ui [ok]
+- persist redux state

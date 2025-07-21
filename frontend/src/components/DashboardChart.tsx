@@ -13,7 +13,7 @@ import {
 
 import React from 'react'
 
-import type { components, operations } from '@/lib/api-types'
+import type { operations } from '@/lib/api-types'
 import {
   formatDurationTooltip,
   formatDurationYAxisTick,

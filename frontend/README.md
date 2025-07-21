@@ -5,7 +5,7 @@ using node v22.12.0
 ### Development
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 npm run dev
 ```
 
